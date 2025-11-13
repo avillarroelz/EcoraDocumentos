@@ -16,7 +16,18 @@
       "Bash(timeout /t 2 /nobreak)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(.gitignore)"
+      "Bash(.gitignore)",
+      "Bash(git commit:*)",
+      "Bash(gh --version)",
+      "Bash(winget install:*)",
+      "Bash(git remote add:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(ssh-keygen:*)",
+      "Bash(cat:*)",
+      "Bash(clip)",
+      "Bash(ssh:*)"
     ],
     "deny": [],
     "ask": []
