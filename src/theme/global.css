@@ -1,0 +1,231 @@
+/* Estilos globales Ecora */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--ecora-font-secondary);
+  background-color: var(--ion-background-color);
+}
+
+/* Tipografía principal - IBM Plex Mono para títulos */
+h1, h2, h3, h4, h5, h6, .title {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  color: var(--ecora-blue-primary);
+  letter-spacing: -0.02em;
+}
+
+/* Spectral para cuerpo de texto */
+p, .text-body, ion-text {
+  font-family: var(--ecora-font-secondary);
+  line-height: 1.6;
+}
+
+/* Logo text styling */
+.ecora-logo-text {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  color: var(--ecora-blue-primary);
+  text-transform: lowercase;
+  letter-spacing: -0.05em;
+}
+
+/* Tagline styling */
+.ecora-tagline {
+  font-family: var(--ecora-font-primary);
+  font-size: 0.65em;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ecora-blue-light);
+}
+
+/* Grid/Trama Ecora - inspirada en el manual */
+.ecora-grid-bg {
+  position: relative;
+  background-image:
+    linear-gradient(to right, var(--ecora-blue-light) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--ecora-blue-light) 1px, transparent 1px);
+  background-size: 60px 60px;
+  background-position: -1px -1px;
+}
+
+.ecora-grid-border {
+  border: 2px solid var(--ecora-blue-light);
+  position: relative;
+}
+
+/* Líneas decorativas estilo Ecora */
+.ecora-line-accent {
+  border-left: 3px solid var(--ecora-blue-light);
+  padding-left: 1rem;
+}
+
+.ecora-line-accent-top {
+  border-top: 3px solid var(--ecora-blue-light);
+  padding-top: 1rem;
+}
+
+/* Card styling con estilo Ecora */
+.ecora-card {
+  background: white;
+  border: 2px solid var(--ecora-blue-light);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 4px 6px rgba(0, 40, 115, 0.1);
+  transition: all 0.3s ease;
+}
+
+.ecora-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 40, 115, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Botones estilo Ecora */
+.ecora-button {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: 2px solid var(--ecora-blue-primary);
+  background: var(--ecora-blue-primary);
+  color: #ffffff; /* Blanco para contraste en fondo oscuro */
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ecora-button:hover {
+  background: var(--ecora-blue-secondary);
+  border-color: var(--ecora-blue-secondary);
+  transform: translateY(-1px);
+}
+
+.ecora-button-outline {
+  background: transparent;
+  color: var(--ecora-blue-primary);
+}
+
+.ecora-button-outline:hover {
+  background: var(--ecora-blue-primary);
+  color: #ffffff; /* Blanco para contraste en fondo oscuro */
+}
+
+/* Badge/Tag styling */
+.ecora-badge {
+  font-family: var(--ecora-font-primary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  background: var(--ecora-blue-light);
+  color: var(--ecora-blue-primary);
+  display: inline-block;
+  letter-spacing: 0.05em;
+}
+
+/* Toolbar/Header personalizado */
+ion-toolbar {
+  --background: var(--ecora-blue-primary);
+  --color: #ffffff; /* Blanco para contraste en toolbar oscuro */
+  --border-color: var(--ecora-blue-light);
+  font-family: var(--ecora-font-primary);
+}
+
+ion-title {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: lowercase;
+  letter-spacing: -0.02em;
+}
+
+/* Content areas */
+ion-content {
+  --background: #f8f9fa;
+}
+
+/* List items con estilo Ecora */
+ion-item {
+  --border-color: var(--ecora-blue-light);
+  --background: white;
+  font-family: var(--ecora-font-secondary);
+}
+
+ion-item:hover {
+  --background: rgba(144, 224, 255, 0.1);
+}
+
+/* FAB Button */
+ion-fab-button {
+  --background: var(--ecora-blue-secondary);
+  --color: #ffffff; /* Blanco para contraste en fondo azul */
+  --box-shadow: 0 4px 12px rgba(0, 40, 115, 0.3);
+}
+
+ion-fab-button:hover {
+  --background: var(--ecora-blue-bright);
+}
+
+/* Input fields */
+ion-input, ion-textarea {
+  --border-color: var(--ecora-blue-light);
+  --background: white;
+  font-family: var(--ecora-font-secondary);
+}
+
+/* Scrollbar personalizado (solo web) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ecora-white);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ecora-blue-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ecora-blue-secondary);
+}
+
+/* Animaciones suaves */
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ecora-card {
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

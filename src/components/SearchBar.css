@@ -1,0 +1,110 @@
+.search-container {
+  margin-bottom: 1.5rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 40, 115, 0.08);
+  overflow: hidden;
+  border: 1px solid rgba(144, 224, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.search-container:hover {
+  box-shadow: 0 6px 20px rgba(6, 118, 232, 0.12);
+  border-color: rgba(6, 118, 232, 0.3);
+}
+
+.search-toolbar {
+  --background: white;
+  --border-color: transparent;
+  --padding-top: 0.75rem;
+  --padding-bottom: 0.75rem;
+}
+
+.ecora-searchbar {
+  --background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  --border-radius: 10px;
+  --box-shadow: inset 0 2px 6px rgba(0, 40, 115, 0.06);
+  --color: var(--ecora-blue-primary);
+  --icon-color: var(--ecora-blue-secondary);
+  --placeholder-color: rgba(0, 40, 115, 0.5);
+  --clear-button-color: var(--ecora-blue-secondary);
+  padding: 0 1.25rem;
+  font-family: var(--ecora-font-secondary);
+}
+
+.ecora-searchbar::part(input) {
+  font-family: var(--ecora-font-secondary);
+  font-size: 1rem;
+}
+
+.search-results-info {
+  padding: 0.5rem 1rem 1rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.results-chip {
+  font-family: var(--ecora-font-primary);
+  font-size: 0.875rem;
+  --background: var(--ecora-blue-light);
+  --color: var(--ecora-blue-primary);
+  margin: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.results-chip:hover {
+  --background: var(--ecora-blue-secondary);
+  --color: #ffffff; /* Blanco para contraste en fondo azul */
+}
+
+.results-chip ion-icon {
+  cursor: pointer;
+  font-size: 1.25rem;
+  margin-left: 0.25rem;
+}
+
+.results-chip ion-icon:hover {
+  color: var(--ecora-coral);
+}
+
+/* Animación de entrada */
+.search-container {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .search-toolbar {
+    --padding-top: 0.25rem;
+    --padding-bottom: 0.25rem;
+  }
+
+  .ecora-searchbar {
+    padding: 0 0.5rem;
+  }
+
+  .ecora-searchbar::part(input) {
+    font-size: 0.9rem;
+  }
+
+  .search-results-info {
+    padding: 0.25rem 0.5rem 0.75rem 0.5rem;
+  }
+
+  .results-chip {
+    font-size: 0.8rem;
+  }
+}

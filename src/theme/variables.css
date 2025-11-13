@@ -1,0 +1,116 @@
+/* Ecora Brand Colors - Basado en el Manual de Marca */
+:root {
+  /* Colores principales de Ecora */
+  --ecora-blue-primary: #002873;      /* PANTONE 2748 C - 50% uso */
+  --ecora-blue-secondary: #0676e8;    /* PANTONE 2727 C - 5% uso */
+  --ecora-blue-bright: #0032ff;       /* PANTONE 285 C - 5% uso */
+  --ecora-blue-light: #90e0ff;        /* PANTONE 2120 C - 5% uso */
+  --ecora-coral: #ff9976;             /* PANTONE 7521 C - 5% uso */
+  --ecora-white: #ffffff;             /* 30% uso */
+
+  /* Colores RGB para compatibilidad */
+  --ecora-blue-primary-rgb: 0, 40, 115;
+  --ecora-blue-secondary-rgb: 6, 118, 232;
+  --ecora-blue-bright-rgb: 0, 50, 255;
+  --ecora-blue-light-rgb: 144, 224, 255;
+  --ecora-coral-rgb: 255, 153, 118;
+
+  /* Tipografía Ecora */
+  --ecora-font-primary: 'IBM Plex Mono', monospace;
+  --ecora-font-secondary: 'Spectral', serif;
+
+  /* Ionic Theme Variables con colores Ecora */
+  --ion-color-primary: var(--ecora-blue-primary);
+  --ion-color-primary-rgb: var(--ecora-blue-primary-rgb);
+  --ion-color-primary-contrast: #ffffff; /* Blanco para contraste en fondo oscuro */
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #002366;
+  --ion-color-primary-tint: #1a3d87;
+
+  --ion-color-secondary: var(--ecora-blue-secondary);
+  --ion-color-secondary-rgb: var(--ecora-blue-secondary-rgb);
+  --ion-color-secondary-contrast: var(--ecora-blue-primary); /* Azul oscuro */
+  --ion-color-secondary-contrast-rgb: var(--ecora-blue-primary-rgb);
+  --ion-color-secondary-shade: #0568cc;
+  --ion-color-secondary-tint: #1f84ea;
+
+  --ion-color-tertiary: var(--ecora-blue-light);
+  --ion-color-tertiary-rgb: var(--ecora-blue-light-rgb);
+  --ion-color-tertiary-contrast: var(--ecora-blue-primary);
+  --ion-color-tertiary-contrast-rgb: var(--ecora-blue-primary-rgb);
+  --ion-color-tertiary-shade: #7fc5e0;
+  --ion-color-tertiary-tint: #9de5ff;
+
+  --ion-color-success: #2dd36f;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28ba62;
+  --ion-color-success-tint: #42d77d;
+
+  --ion-color-warning: var(--ecora-coral);
+  --ion-color-warning-rgb: var(--ecora-coral-rgb);
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e08768;
+  --ion-color-warning-tint: #ffa384;
+
+  --ion-color-danger: #eb445a;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cf3c4f;
+  --ion-color-danger-tint: #ed576b;
+
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 36, 40;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  --ion-color-medium: #92949c;
+  --ion-color-medium-rgb: 146, 148, 156;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #808289;
+  --ion-color-medium-tint: #9d9fa6;
+
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
+
+  /* Backgrounds */
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+
+  --ion-text-color: var(--ecora-blue-primary);
+  --ion-text-color-rgb: var(--ecora-blue-primary-rgb);
+
+  --ion-toolbar-background: var(--ecora-blue-primary);
+  --ion-toolbar-color: #ffffff; /* Blanco para contraste en toolbar oscuro */
+
+  /* Borders and Separators - usando el cyan de la retícula */
+  --ion-border-color: var(--ecora-blue-light);
+  --ion-item-border-color: var(--ecora-blue-light);
+}
+
+/* Modo oscuro (opcional) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-background-color: var(--ecora-blue-primary);
+    --ion-background-color-rgb: var(--ecora-blue-primary-rgb);
+
+    --ion-text-color: var(--ecora-blue-secondary); /* Azul secundario */
+    --ion-text-color-rgb: var(--ecora-blue-secondary-rgb);
+
+    --ion-color-step-50: #0e2b5a;
+    --ion-color-step-100: #1a3670;
+    --ion-color-step-150: #264186;
+    --ion-color-step-200: #324c9c;
+    --ion-color-step-250: #3e57b2;
+  }
+}

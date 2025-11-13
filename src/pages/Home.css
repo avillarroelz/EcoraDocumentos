@@ -1,0 +1,265 @@
+.home-content {
+  --background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Header de contenido */
+.content-header {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: linear-gradient(
+    135deg,
+    var(--ecora-blue-primary) 0%,
+    var(--ecora-blue-secondary) 50%,
+    var(--ecora-blue-bright) 100%
+  );
+  border-radius: 16px;
+  margin-bottom: 2.5rem;
+  box-shadow:
+    0 8px 32px rgba(0, 40, 115, 0.15),
+    0 2px 8px rgba(0, 40, 115, 0.1);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.content-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(to right, rgba(144, 224, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(144, 224, 255, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.page-title {
+  font-family: var(--ecora-font-primary);
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff; /* Blanco para contraste en fondo oscuro */
+  margin: 0 0 0.5rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--ecora-blue-light);
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header title en toolbar */
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecora-logo-text {
+  font-family: var(--ecora-font-primary);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.05em;
+}
+
+/* Lista de secciones */
+.sections-list {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* Estado vacío */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  background: white;
+  border-radius: 12px;
+  border: 2px dashed var(--ecora-blue-light);
+  margin: 2rem 0;
+}
+
+.empty-state p {
+  font-family: var(--ecora-font-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+/* FAB Button personalizado */
+ion-fab-button {
+  --background: var(--ecora-blue-secondary);
+  --background-hover: var(--ecora-blue-bright);
+  --background-activated: var(--ecora-blue-primary);
+  --color: #ffffff; /* Blanco para contraste en fondo azul */
+  --box-shadow: 0 4px 16px rgba(6, 118, 232, 0.4);
+  --border-radius: 16px;
+}
+
+ion-fab-button::part(native) {
+  border: 3px solid rgba(144, 224, 255, 0.3);
+}
+
+/* Alert personalizado */
+ion-alert {
+  --background: #ffffff !important;
+  --backdrop-opacity: 0.6;
+}
+
+.alert-wrapper {
+  background: #ffffff !important;
+  border: 3px solid var(--ecora-blue-primary) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 32px rgba(0, 40, 115, 0.3) !important;
+}
+
+.alert-head {
+  background: #ffffff !important;
+}
+
+.alert-message {
+  background: #ffffff !important;
+}
+
+ion-alert::part(title) {
+  font-family: var(--ecora-font-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #002873;
+  padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+ion-alert::part(message) {
+  font-family: var(--ecora-font-secondary);
+  font-size: 1rem;
+  color: #333333;
+  line-height: 1.6;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+}
+
+.alert-button-group {
+  padding: 1rem;
+  border-top: 1px solid rgba(0, 40, 115, 0.1);
+  background: #ffffff !important;
+}
+
+ion-alert .alert-button-group {
+  padding: 1rem;
+  border-top: 1px solid rgba(0, 40, 115, 0.1);
+  background: #ffffff !important;
+}
+
+ion-alert .alert-button {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  height: 44px;
+  border-radius: 8px;
+  margin: 0.25rem;
+}
+
+ion-alert .alert-button.alert-button-role-cancel {
+  color: #002873;
+  background: rgba(0, 40, 115, 0.08);
+}
+
+ion-alert .alert-button.alert-button-role-confirm {
+  color: white;
+  background: linear-gradient(135deg, #f53d3d 0%, #d32f2f 100%);
+  font-weight: 700;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.content-header {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.sections-list {
+  animation: fadeInUp 0.6s ease-out 0.1s both;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .content-container {
+    padding: 0.5rem;
+  }
+
+  .content-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .page-subtitle {
+    font-size: 0.75rem;
+  }
+
+  .empty-state {
+    padding: 3rem 1.5rem;
+    margin: 1rem 0;
+  }
+
+  .empty-state p {
+    font-size: 0.9rem;
+  }
+
+  ion-fab-button {
+    --border-radius: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-header {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.25rem;
+  }
+
+  .header-title .ecora-logo-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

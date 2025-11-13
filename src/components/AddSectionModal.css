@@ -1,0 +1,205 @@
+.modal-content {
+  --background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+}
+
+.modal-inner {
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Información del padre */
+.parent-info {
+  background: white;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+  border-left: 5px solid var(--ecora-blue-secondary);
+  box-shadow: 0 2px 12px rgba(0, 40, 115, 0.08);
+  transition: all 0.3s ease;
+}
+
+.parent-info:hover {
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.12);
+}
+
+.parent-label {
+  font-family: var(--ecora-font-primary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(0, 40, 115, 0.6);
+  margin: 0 0 0.25rem 0;
+}
+
+.parent-title {
+  font-family: var(--ecora-font-primary);
+  font-size: 1.1rem;
+  color: var(--ecora-blue-primary);
+  margin: 0;
+}
+
+/* Formulario */
+.form-list {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(144, 224, 255, 0.3);
+  box-shadow: 0 2px 12px rgba(0, 40, 115, 0.08);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.form-list:hover {
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.12);
+  border-color: rgba(6, 118, 232, 0.4);
+}
+
+.form-item {
+  --background: white;
+  --border-color: rgba(144, 224, 255, 0.2);
+  --padding-start: 1rem;
+  --padding-end: 1rem;
+  --padding-top: 1rem;
+  --padding-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-item:hover {
+  --background: rgba(144, 224, 255, 0.03);
+}
+
+.form-label {
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ecora-blue-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.required {
+  color: var(--ecora-coral);
+}
+
+.form-input,
+.form-textarea {
+  font-family: var(--ecora-font-secondary);
+  font-size: 1rem;
+  --background: white;
+  --padding-start: 0;
+  --padding-top: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.form-input {
+  --border-width: 0 0 2px 0;
+  --border-color: var(--ecora-blue-light);
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  --border-color: var(--ecora-blue-secondary);
+}
+
+.form-textarea {
+  --border-width: 2px;
+  --border-color: rgba(144, 224, 255, 0.5);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.form-textarea:focus {
+  --border-color: var(--ecora-blue-secondary);
+  box-shadow: 0 0 0 3px rgba(6, 118, 232, 0.1);
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.save-button {
+  --background: linear-gradient(135deg, var(--ecora-blue-primary) 0%, var(--ecora-blue-secondary) 100%);
+  --background-hover: var(--ecora-blue-bright);
+  --color: #ffffff;
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  height: 48px;
+  margin: 0;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 40, 115, 0.2);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.save-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(6, 118, 232, 0.3);
+}
+
+.save-button:active {
+  transform: translateY(0);
+}
+
+.save-button:disabled {
+  --background: rgba(0, 40, 115, 0.3);
+  --color: rgba(255, 255, 255, 0.6);
+  transform: none;
+  box-shadow: none;
+}
+
+.cancel-button {
+  --border-color: var(--ecora-blue-primary);
+  --color: var(--ecora-blue-primary);
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  height: 48px;
+  margin: 0;
+  border-radius: 10px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cancel-button:hover {
+  --background: rgba(6, 118, 232, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .modal-inner {
+    padding: 1rem;
+  }
+
+  .parent-info {
+    padding: 0.75rem;
+  }
+
+  .parent-title {
+    font-size: 1rem;
+  }
+
+  .form-label {
+    font-size: 0.8rem;
+  }
+
+  .form-input,
+  .form-textarea {
+    font-size: 0.9rem;
+  }
+
+  .save-button,
+  .cancel-button {
+    height: 44px;
+    font-size: 0.875rem;
+  }
+}
