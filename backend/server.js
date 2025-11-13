@@ -10,9 +10,31 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
+// Middleware - CORS con soporte para Netlify y múltiples orígenes
+const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100'];
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100'],
+  origin: function (origin, callback) {
+    // Permitir requests sin origin (como mobile apps o curl)
+    if (!origin) return callback(null, true);
+
+    // Verificar si el origin está en la lista
+    if (corsOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+
+    // Permitir cualquier subdominio de netlify.app
+    if (origin.endsWith('.netlify.app')) {
+      return callback(null, true);
+    }
+
+    // Permitir cualquier subdominio de vercel.app
+    if (origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+
+    callback(new Error('No permitido por CORS'));
+  },
   credentials: true
 }));
 app.use(bodyParser.json());
