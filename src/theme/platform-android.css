@@ -1,0 +1,1351 @@
+/* ===========================================
+   ANDROID - Material Design 3 (Material You)
+   =========================================== */
+
+/* Variables específicas de Material Design 3 */
+body.platform-android {
+  /* Tipografía Material You */
+  --md-font-primary: 'Inter', 'Roboto', system-ui, sans-serif;
+  --md-font-secondary: 'Plus Jakarta Sans', 'Roboto', system-ui, sans-serif;
+
+  /* Bordes Material Design 3 */
+  --md-radius-xs: 4px;
+  --md-radius-sm: 8px;
+  --md-radius-md: 12px;
+  --md-radius-lg: 16px;
+  --md-radius-xl: 28px;
+  --md-radius-full: 9999px;
+
+  /* Elevaciones Material Design 3 */
+  --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --md-elevation-2: 0 1px 2px rgba(0, 0, 0, 0.3), 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --md-elevation-4: 0 6px 10px 4px rgba(0, 0, 0, 0.15), 0 2px 3px rgba(0, 0, 0, 0.3);
+  --md-elevation-5: 0 8px 12px 6px rgba(0, 0, 0, 0.15), 0 4px 4px rgba(0, 0, 0, 0.3);
+
+  /* Transiciones Material Motion */
+  --md-motion-standard: cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-emphasized: cubic-bezier(0.2, 0, 0, 1);
+  --md-motion-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --md-motion-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+
+  /* Duraciones de transición */
+  --md-duration-short1: 50ms;
+  --md-duration-short2: 100ms;
+  --md-duration-short3: 150ms;
+  --md-duration-short4: 200ms;
+  --md-duration-medium1: 250ms;
+  --md-duration-medium2: 300ms;
+  --md-duration-medium3: 350ms;
+  --md-duration-medium4: 400ms;
+  --md-duration-long1: 450ms;
+  --md-duration-long2: 500ms;
+
+  /* Estado de interacción */
+  --md-state-hover: 0.08;
+  --md-state-focus: 0.12;
+  --md-state-pressed: 0.12;
+  --md-state-dragged: 0.16;
+}
+
+/* =====================
+   COMPONENTES ANDROID
+   ===================== */
+
+/* Toolbar/AppBar - Material Design 3 */
+body.platform-android ion-toolbar {
+  --background: var(--ecora-blue-primary);
+  --color: #ffffff;
+  --min-height: 64px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+body.platform-android ion-title {
+  font-family: var(--md-font-primary);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* Cards - Material Design 3 Filled Card */
+body.platform-android ion-card,
+body.platform-android .ecora-card {
+  border-radius: var(--md-radius-lg);
+  box-shadow: var(--md-elevation-1);
+  border: none;
+  transition: box-shadow var(--md-duration-medium2) var(--md-motion-standard),
+              transform var(--md-duration-medium2) var(--md-motion-standard);
+  overflow: hidden;
+}
+
+body.platform-android ion-card:hover,
+body.platform-android .ecora-card:hover {
+  box-shadow: var(--md-elevation-2);
+  transform: translateY(-2px);
+}
+
+body.platform-android ion-card:active,
+body.platform-android .ecora-card:active {
+  box-shadow: var(--md-elevation-1);
+  transform: translateY(0);
+}
+
+/* Elevated Card variant */
+body.platform-android .card-elevated {
+  box-shadow: var(--md-elevation-2);
+}
+
+body.platform-android .card-elevated:hover {
+  box-shadow: var(--md-elevation-4);
+}
+
+/* Buttons - Material Design 3 */
+body.platform-android ion-button {
+  --border-radius: var(--md-radius-full);
+  --padding-start: 24px;
+  --padding-end: 24px;
+  font-family: var(--md-font-primary);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  min-height: 40px;
+  transition: box-shadow var(--md-duration-short4) var(--md-motion-standard),
+              background var(--md-duration-short4) var(--md-motion-standard);
+}
+
+/* Filled Button */
+body.platform-android ion-button[color="primary"] {
+  --background: var(--ecora-blue-primary);
+  --background-hover: var(--ecora-blue-primary);
+  --background-focused: var(--ecora-blue-primary);
+  --background-activated: var(--ecora-blue-primary);
+  --box-shadow: none;
+}
+
+body.platform-android ion-button[color="primary"]:hover {
+  --box-shadow: var(--md-elevation-1);
+}
+
+body.platform-android ion-button[color="primary"]:active {
+  --box-shadow: none;
+}
+
+/* Tonal Button */
+body.platform-android ion-button[fill="clear"] {
+  --background: rgba(0, 40, 115, 0.08);
+  --background-hover: rgba(0, 40, 115, 0.12);
+  --color: var(--ecora-blue-primary);
+  --border-radius: var(--md-radius-full);
+}
+
+/* Outlined Button */
+body.platform-android ion-button[fill="outline"] {
+  --border-width: 1px;
+  --border-color: var(--ecora-gray-400);
+  --background: transparent;
+  --color: var(--ecora-blue-primary);
+  --border-radius: var(--md-radius-full);
+}
+
+/* FAB - Material Design 3 */
+body.platform-android ion-fab-button {
+  --background: var(--ecora-blue-secondary);
+  --color: var(--ecora-blue-primary);
+  --box-shadow: var(--md-elevation-3);
+  width: 56px;
+  height: 56px;
+  --border-radius: var(--md-radius-lg);
+  transition: box-shadow var(--md-duration-medium2) var(--md-motion-standard),
+              transform var(--md-duration-medium2) var(--md-motion-standard);
+}
+
+body.platform-android ion-fab-button:hover {
+  --box-shadow: var(--md-elevation-4);
+  transform: scale(1.02);
+}
+
+body.platform-android ion-fab-button:active {
+  --box-shadow: var(--md-elevation-3);
+  transform: scale(0.98);
+}
+
+/* Extended FAB */
+body.platform-android ion-fab-button.extended {
+  --border-radius: var(--md-radius-lg);
+  width: auto;
+  padding: 0 16px;
+}
+
+/* Items/List - Material Design 3 */
+body.platform-android ion-item {
+  --background: transparent;
+  --border-color: transparent;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 16px;
+  --min-height: 56px;
+  border-radius: 0;
+  margin: 0;
+  transition: background var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-item:hover {
+  --background: rgba(0, 40, 115, 0.08);
+}
+
+body.platform-android ion-item:active {
+  --background: rgba(0, 40, 115, 0.12);
+}
+
+/* Section Items - Material Design 3 Card style */
+body.platform-android .section-item {
+  border-radius: var(--md-radius-lg);
+  box-shadow: var(--md-elevation-1);
+  border: none;
+  margin: 8px 0;
+  transition: box-shadow var(--md-duration-medium2) var(--md-motion-standard),
+              transform var(--md-duration-medium2) var(--md-motion-emphasized);
+}
+
+body.platform-android .section-item:hover {
+  box-shadow: var(--md-elevation-2);
+  transform: translateY(-2px);
+}
+
+body.platform-android .section-item:active {
+  box-shadow: var(--md-elevation-1);
+  transform: scale(0.99);
+}
+
+body.platform-android .section-item.level-0 {
+  --border-width: 0;
+  box-shadow: var(--md-elevation-2);
+  background: linear-gradient(135deg, rgba(0, 40, 115, 0.04) 0%, #ffffff 100%);
+}
+
+body.platform-android .section-item.level-0:hover {
+  box-shadow: var(--md-elevation-3);
+}
+
+/* Chips - Material Design 3 */
+body.platform-android ion-chip {
+  --background: rgba(0, 40, 115, 0.08);
+  --color: var(--ecora-blue-primary);
+  border-radius: var(--md-radius-sm);
+  height: 32px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-chip:hover {
+  --background: rgba(0, 40, 115, 0.12);
+}
+
+body.platform-android ion-chip[outline="true"] {
+  --background: transparent;
+  border: 1px solid var(--ecora-gray-400);
+}
+
+/* Search Bar - Material Design 3 Search */
+body.platform-android ion-searchbar {
+  --background: rgba(0, 40, 115, 0.08);
+  --border-radius: var(--md-radius-full);
+  --box-shadow: none;
+  --placeholder-opacity: 0.6;
+  height: 56px;
+  padding: 8px 16px;
+  transition: background var(--md-duration-short4) var(--md-motion-standard),
+              box-shadow var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-searchbar.searchbar-has-focus {
+  --background: #ffffff;
+  --box-shadow: var(--md-elevation-2);
+}
+
+/* Modals/Dialogs - Material Design 3 */
+body.platform-android ion-modal {
+  --border-radius: var(--md-radius-xl);
+  --box-shadow: var(--md-elevation-5);
+}
+
+body.platform-android ion-modal .modal-wrapper {
+  border-radius: var(--md-radius-xl);
+}
+
+/* Action Sheets */
+body.platform-android ion-action-sheet {
+  --background: var(--ion-background-color);
+  --button-background: transparent;
+  --button-color: var(--ecora-gray-800);
+}
+
+body.platform-android ion-action-sheet .action-sheet-container {
+  border-radius: var(--md-radius-xl) var(--md-radius-xl) 0 0;
+}
+
+/* Input Fields - Material Design 3 Filled */
+body.platform-android ion-input,
+body.platform-android ion-textarea {
+  --background: rgba(0, 40, 115, 0.04);
+  --border-radius: var(--md-radius-xs) var(--md-radius-xs) 0 0;
+  --border-width: 0 0 1px 0;
+  --border-color: var(--ecora-gray-400);
+  --highlight-color-focused: var(--ecora-blue-primary);
+  --highlight-color-valid: var(--ion-color-success);
+  --highlight-color-invalid: var(--ion-color-danger);
+  min-height: 56px;
+}
+
+body.platform-android ion-input:focus-within,
+body.platform-android ion-textarea:focus-within {
+  --border-color: var(--ecora-blue-primary);
+  --border-width: 0 0 2px 0;
+}
+
+/* Badges - Material Design 3 */
+body.platform-android ion-badge {
+  --padding-start: 8px;
+  --padding-end: 8px;
+  border-radius: var(--md-radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  min-width: 24px;
+  height: 24px;
+}
+
+/* Content Header */
+body.platform-android .content-header {
+  border-radius: 0 0 var(--md-radius-xl) var(--md-radius-xl);
+  box-shadow: var(--md-elevation-2);
+}
+
+/* Quick Access Cards */
+body.platform-android .quick-access-card {
+  border-radius: var(--md-radius-lg);
+  box-shadow: var(--md-elevation-1);
+  border: none;
+}
+
+body.platform-android .quick-access-card:hover {
+  box-shadow: var(--md-elevation-2);
+  transform: translateY(-2px);
+}
+
+body.platform-android .quick-access-item {
+  border-radius: var(--md-radius-md);
+  border-left: 4px solid var(--ecora-blue-secondary);
+  box-shadow: var(--md-elevation-1);
+}
+
+body.platform-android .quick-access-item:hover {
+  box-shadow: var(--md-elevation-2);
+}
+
+/* Empty State */
+body.platform-android .empty-state {
+  border-radius: var(--md-radius-xl);
+  box-shadow: var(--md-elevation-1);
+  border: none;
+}
+
+/* Ripple Effect (simulado con CSS) */
+body.platform-android ion-button::after,
+body.platform-android ion-item::after,
+body.platform-android ion-card::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.platform-android ion-button:active::after,
+body.platform-android ion-item:active::after,
+body.platform-android ion-card:active::after {
+  width: 200%;
+  height: 200%;
+  opacity: 1;
+  transition: width 0s, height 0s, opacity 0s;
+}
+
+/* Navigation Bar Items */
+body.platform-android ion-tab-bar {
+  --background: var(--ion-background-color);
+  height: 80px;
+  box-shadow: var(--md-elevation-2);
+}
+
+body.platform-android ion-tab-button {
+  --color: var(--ecora-gray-500);
+  --color-selected: var(--ecora-blue-primary);
+  --ripple-color: var(--ecora-blue-primary);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+body.platform-android ion-tab-button.tab-selected {
+  --background: rgba(0, 40, 115, 0.08);
+  border-radius: var(--md-radius-full);
+}
+
+/* Segment (Tab Pills) - Material Design 3 */
+body.platform-android ion-segment {
+  --background: rgba(0, 40, 115, 0.08);
+  border-radius: var(--md-radius-full);
+  padding: 4px;
+}
+
+body.platform-android ion-segment-button {
+  --border-radius: var(--md-radius-full);
+  --indicator-color: var(--ecora-blue-secondary);
+  --color: var(--ecora-gray-600);
+  --color-checked: var(--ecora-blue-primary);
+  font-weight: 500;
+  min-height: 40px;
+}
+
+/* =====================
+   MODO OSCURO ANDROID
+   ===================== */
+
+body.platform-android.dark-mode {
+  --md-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6);
+  --md-elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.6);
+  --md-elevation-3: 0 4px 8px 3px rgba(0, 0, 0, 0.4), 0 1px 3px rgba(0, 0, 0, 0.6);
+  --md-elevation-4: 0 6px 10px 4px rgba(0, 0, 0, 0.4), 0 2px 3px rgba(0, 0, 0, 0.6);
+  --md-elevation-5: 0 8px 12px 6px rgba(0, 0, 0, 0.4), 0 4px 4px rgba(0, 0, 0, 0.6);
+}
+
+body.platform-android.dark-mode ion-card,
+body.platform-android.dark-mode .ecora-card {
+  --background: #1a2235;
+  box-shadow: var(--md-elevation-2);
+}
+
+body.platform-android.dark-mode .section-item {
+  background: linear-gradient(135deg, #1a2235 0%, #151b2b 100%);
+  box-shadow: var(--md-elevation-1);
+}
+
+body.platform-android.dark-mode ion-searchbar {
+  --background: rgba(59, 130, 246, 0.12);
+}
+
+body.platform-android.dark-mode ion-searchbar.searchbar-has-focus {
+  --background: #1a2235;
+}
+
+body.platform-android.dark-mode ion-chip {
+  --background: rgba(59, 130, 246, 0.16);
+  --color: #60a5fa;
+}
+
+body.platform-android.dark-mode ion-button[fill="clear"] {
+  --background: rgba(59, 130, 246, 0.12);
+  --color: #60a5fa;
+}
+
+body.platform-android.dark-mode .quick-access-card {
+  background: linear-gradient(135deg, #1a2235 0%, #151b2b 100%);
+  box-shadow: var(--md-elevation-2);
+}
+
+body.platform-android.dark-mode .quick-access-item {
+  background: linear-gradient(135deg, #151b2b 0%, #1a2235 100%);
+  border-left-color: #3b82f6;
+  box-shadow: var(--md-elevation-1);
+}
+
+body.platform-android.dark-mode ion-item:hover {
+  --background: rgba(59, 130, 246, 0.12);
+}
+
+/* ===========================================
+   MATERIAL DESIGN 3 - MEJORAS AVANZADAS
+   =========================================== */
+
+/* =====================
+   DYNAMIC COLOR SYSTEM
+   ===================== */
+
+/* Paleta tonal primaria (basada en Ecora blue) */
+body.platform-android {
+  /* Primary Tonal Palette */
+  --md-primary-0: #000000;
+  --md-primary-10: #001945;
+  --md-primary-20: #002b6e;
+  --md-primary-25: #003584;
+  --md-primary-30: #003f9a;
+  --md-primary-35: #004ab1;
+  --md-primary-40: #0055c8;
+  --md-primary-50: #1a6fef;
+  --md-primary-60: #4d8aff;
+  --md-primary-70: #7ea8ff;
+  --md-primary-80: #b0c6ff;
+  --md-primary-90: #d9e2ff;
+  --md-primary-95: #eef0ff;
+  --md-primary-99: #fefbff;
+  --md-primary-100: #ffffff;
+
+  /* Secondary Tonal Palette */
+  --md-secondary-0: #000000;
+  --md-secondary-10: #141b2c;
+  --md-secondary-20: #293042;
+  --md-secondary-30: #404659;
+  --md-secondary-40: #575e71;
+  --md-secondary-50: #70778b;
+  --md-secondary-60: #8a90a5;
+  --md-secondary-70: #a4abc0;
+  --md-secondary-80: #c0c6dc;
+  --md-secondary-90: #dce2f9;
+  --md-secondary-95: #eef0ff;
+  --md-secondary-99: #fefbff;
+  --md-secondary-100: #ffffff;
+
+  /* Tertiary Tonal Palette (coral accent) */
+  --md-tertiary-0: #000000;
+  --md-tertiary-10: #2d1600;
+  --md-tertiary-20: #4a2800;
+  --md-tertiary-30: #693c00;
+  --md-tertiary-40: #8a5100;
+  --md-tertiary-50: #ac6700;
+  --md-tertiary-60: #cf7e00;
+  --md-tertiary-70: #f39700;
+  --md-tertiary-80: #ffb86c;
+  --md-tertiary-90: #ffdcb8;
+  --md-tertiary-95: #ffeedc;
+  --md-tertiary-99: #fffbff;
+  --md-tertiary-100: #ffffff;
+
+  /* Neutral Tonal Palette (surfaces) */
+  --md-neutral-0: #000000;
+  --md-neutral-4: #0d0e11;
+  --md-neutral-6: #121316;
+  --md-neutral-10: #1b1b1f;
+  --md-neutral-12: #1f1f23;
+  --md-neutral-17: #292a2d;
+  --md-neutral-20: #303034;
+  --md-neutral-22: #353538;
+  --md-neutral-24: #39393d;
+  --md-neutral-25: #3b3b3f;
+  --md-neutral-30: #47474a;
+  --md-neutral-35: #525256;
+  --md-neutral-40: #5e5e62;
+  --md-neutral-50: #77777a;
+  --md-neutral-60: #919094;
+  --md-neutral-70: #ababaf;
+  --md-neutral-80: #c7c6ca;
+  --md-neutral-87: #dad9dd;
+  --md-neutral-90: #e3e2e6;
+  --md-neutral-92: #e9e8ec;
+  --md-neutral-94: #efedf1;
+  --md-neutral-95: #f2f0f4;
+  --md-neutral-96: #f5f3f7;
+  --md-neutral-98: #fbf8fd;
+  --md-neutral-99: #fefbff;
+  --md-neutral-100: #ffffff;
+
+  /* Error Tonal Palette */
+  --md-error-0: #000000;
+  --md-error-10: #410002;
+  --md-error-20: #690005;
+  --md-error-30: #93000a;
+  --md-error-40: #ba1a1a;
+  --md-error-50: #de3730;
+  --md-error-60: #ff5449;
+  --md-error-70: #ff897d;
+  --md-error-80: #ffb4ab;
+  --md-error-90: #ffdad6;
+  --md-error-95: #ffedea;
+  --md-error-99: #fffbff;
+  --md-error-100: #ffffff;
+
+  /* Surface Tones (elevation with tonal overlay) */
+  --md-surface: var(--md-neutral-99);
+  --md-surface-dim: var(--md-neutral-87);
+  --md-surface-bright: var(--md-neutral-99);
+  --md-surface-container-lowest: var(--md-neutral-100);
+  --md-surface-container-low: var(--md-neutral-96);
+  --md-surface-container: var(--md-neutral-94);
+  --md-surface-container-high: var(--md-neutral-92);
+  --md-surface-container-highest: var(--md-neutral-90);
+
+  /* On colors */
+  --md-on-surface: var(--md-neutral-10);
+  --md-on-surface-variant: var(--md-neutral-30);
+  --md-outline: var(--md-neutral-50);
+  --md-outline-variant: var(--md-neutral-80);
+}
+
+/* =====================
+   TONAL SURFACES
+   ===================== */
+
+/* Surface elevation levels con tonal overlay */
+body.platform-android .surface-level-0 {
+  background: var(--md-surface);
+}
+
+body.platform-android .surface-level-1 {
+  background: var(--md-surface-container-low);
+  box-shadow: var(--md-elevation-1);
+}
+
+body.platform-android .surface-level-2 {
+  background: var(--md-surface-container);
+  box-shadow: var(--md-elevation-2);
+}
+
+body.platform-android .surface-level-3 {
+  background: var(--md-surface-container-high);
+  box-shadow: var(--md-elevation-3);
+}
+
+body.platform-android .surface-level-4,
+body.platform-android .surface-level-5 {
+  background: var(--md-surface-container-highest);
+  box-shadow: var(--md-elevation-4);
+}
+
+/* Cards con surface tones */
+body.platform-android ion-card,
+body.platform-android .ecora-card {
+  background: var(--md-surface-container-low);
+}
+
+body.platform-android ion-card:hover,
+body.platform-android .ecora-card:hover {
+  background: var(--md-surface-container);
+}
+
+/* =====================
+   BOTTOM NAVIGATION M3
+   ===================== */
+
+body.platform-android ion-tab-bar {
+  --background: var(--md-surface-container);
+  height: 80px;
+  box-shadow: none;
+  border-top: none;
+  padding: 12px 8px 16px;
+}
+
+body.platform-android ion-tab-button {
+  --color: var(--md-on-surface-variant);
+  --color-selected: var(--md-primary-40);
+  font-family: var(--md-font-primary);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  position: relative;
+  transition: all var(--md-duration-medium2) var(--md-motion-emphasized);
+}
+
+/* Pill indicator animado */
+body.platform-android ion-tab-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 64px;
+  height: 32px;
+  background: var(--md-primary-90);
+  border-radius: var(--md-radius-full);
+  transition: transform var(--md-duration-medium2) var(--md-motion-emphasized);
+  z-index: 0;
+}
+
+body.platform-android ion-tab-button.tab-selected::before {
+  transform: translateX(-50%) scaleX(1);
+}
+
+body.platform-android ion-tab-button ion-icon {
+  font-size: 24px;
+  position: relative;
+  z-index: 1;
+  transition: transform var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-tab-button.tab-selected ion-icon {
+  transform: translateY(-2px);
+}
+
+body.platform-android ion-tab-button ion-label {
+  position: relative;
+  z-index: 1;
+  margin-top: 4px;
+}
+
+/* Badge en tab */
+body.platform-android ion-tab-button ion-badge {
+  --background: var(--md-error-40);
+  --color: var(--md-error-100);
+  position: absolute;
+  top: 2px;
+  right: calc(50% - 28px);
+  min-width: 16px;
+  height: 16px;
+  font-size: 11px;
+  padding: 0 4px;
+}
+
+/* =====================
+   TEXT FIELDS M3
+   ===================== */
+
+/* Filled Text Field */
+body.platform-android .text-field-filled,
+body.platform-android ion-item.item-input {
+  --background: var(--md-surface-container-highest);
+  --border-radius: var(--md-radius-xs) var(--md-radius-xs) 0 0;
+  position: relative;
+  min-height: 56px;
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android .text-field-filled::after,
+body.platform-android ion-item.item-input::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--md-on-surface-variant);
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android .text-field-filled:focus-within::after,
+body.platform-android ion-item.item-input.item-has-focus::after {
+  height: 2px;
+  background: var(--md-primary-40);
+}
+
+/* Outlined Text Field */
+body.platform-android .text-field-outlined {
+  --background: transparent;
+  border: 1px solid var(--md-outline);
+  border-radius: var(--md-radius-xs);
+  min-height: 56px;
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android .text-field-outlined:focus-within {
+  border-color: var(--md-primary-40);
+  border-width: 2px;
+}
+
+/* Floating Label */
+body.platform-android ion-input ion-label,
+body.platform-android ion-textarea ion-label {
+  font-family: var(--md-font-secondary);
+  font-size: 16px;
+  color: var(--md-on-surface-variant);
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+  transform-origin: left top;
+}
+
+body.platform-android ion-input.has-value ion-label,
+body.platform-android ion-input.has-focus ion-label,
+body.platform-android ion-textarea.has-value ion-label,
+body.platform-android ion-textarea.has-focus ion-label {
+  font-size: 12px;
+  transform: translateY(-8px);
+  color: var(--md-primary-40);
+}
+
+/* Helper/Error text */
+body.platform-android .input-helper {
+  font-family: var(--md-font-secondary);
+  font-size: 12px;
+  color: var(--md-on-surface-variant);
+  padding: 4px 16px 0;
+  letter-spacing: 0.4px;
+}
+
+body.platform-android .input-error {
+  color: var(--md-error-40);
+}
+
+body.platform-android .text-field-error {
+  border-color: var(--md-error-40);
+}
+
+body.platform-android .text-field-error::after {
+  background: var(--md-error-40);
+}
+
+/* =====================
+   SNACKBARS M3
+   ===================== */
+
+body.platform-android ion-toast {
+  --background: var(--md-neutral-20);
+  --color: var(--md-neutral-90);
+  --border-radius: var(--md-radius-xs);
+  --box-shadow: var(--md-elevation-3);
+  --button-color: var(--md-primary-80);
+  --max-width: 600px;
+  --min-height: 48px;
+  font-family: var(--md-font-secondary);
+  font-size: 14px;
+  letter-spacing: 0.25px;
+}
+
+body.platform-android ion-toast::part(container) {
+  padding: 0 16px;
+}
+
+body.platform-android ion-toast::part(message) {
+  padding: 14px 0;
+}
+
+body.platform-android ion-toast::part(button) {
+  font-family: var(--md-font-primary);
+  font-weight: 500;
+  font-size: 14px;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  padding: 0 12px;
+  min-height: 48px;
+}
+
+/* Snackbar con acción */
+body.platform-android ion-toast.toast-action::part(button) {
+  color: var(--md-primary-80);
+}
+
+/* Snackbar de error */
+body.platform-android ion-toast.toast-error {
+  --background: var(--md-error-20);
+  --color: var(--md-error-90);
+  --button-color: var(--md-error-80);
+}
+
+/* Snackbar de éxito */
+body.platform-android ion-toast.toast-success {
+  --background: #1b3d2f;
+  --color: #c8e6c9;
+  --button-color: #81c784;
+}
+
+/* =====================
+   PROGRESS INDICATORS M3
+   ===================== */
+
+/* Linear Progress */
+body.platform-android ion-progress-bar {
+  --background: var(--md-primary-90);
+  --progress-background: var(--md-primary-40);
+  height: 4px;
+  border-radius: 0;
+}
+
+/* Circular Progress */
+body.platform-android ion-spinner {
+  --color: var(--md-primary-40);
+  width: 48px;
+  height: 48px;
+}
+
+/* Determinate circular progress */
+body.platform-android .progress-circular {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+body.platform-android .progress-circular svg {
+  transform: rotate(-90deg);
+}
+
+body.platform-android .progress-circular circle {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+body.platform-android .progress-circular .track {
+  stroke: var(--md-primary-90);
+}
+
+body.platform-android .progress-circular .indicator {
+  stroke: var(--md-primary-40);
+  transition: stroke-dashoffset var(--md-duration-medium4) var(--md-motion-standard);
+}
+
+/* Linear indeterminate animation */
+@keyframes md-linear-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+body.platform-android ion-progress-bar[type="indeterminate"]::part(progress) {
+  animation: md-linear-indeterminate 2s infinite var(--md-motion-standard);
+}
+
+/* =====================
+   STATE LAYERS M3
+   ===================== */
+
+/* State layer base */
+body.platform-android .state-layer {
+  position: relative;
+  overflow: hidden;
+}
+
+body.platform-android .state-layer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-duration-short4) var(--md-motion-standard);
+  pointer-events: none;
+}
+
+/* Hover state - 8% */
+body.platform-android .state-layer:hover::before {
+  opacity: 0.08;
+}
+
+/* Focus state - 12% */
+body.platform-android .state-layer:focus-visible::before {
+  opacity: 0.12;
+}
+
+/* Pressed state - 12% */
+body.platform-android .state-layer:active::before {
+  opacity: 0.12;
+}
+
+/* Dragged state - 16% */
+body.platform-android .state-layer.dragging::before {
+  opacity: 0.16;
+}
+
+/* State layers para componentes específicos */
+body.platform-android ion-button {
+  position: relative;
+  overflow: hidden;
+}
+
+body.platform-android ion-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity var(--md-duration-short4) var(--md-motion-standard);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+body.platform-android ion-button:hover::before {
+  opacity: 0.08;
+}
+
+body.platform-android ion-button:focus-visible::before {
+  opacity: 0.12;
+}
+
+body.platform-android ion-button:active::before {
+  opacity: 0.12;
+}
+
+/* =====================
+   DIVIDERS M3
+   ===================== */
+
+body.platform-android .divider,
+body.platform-android hr {
+  border: none;
+  height: 1px;
+  background: var(--md-outline-variant);
+  margin: 0;
+}
+
+body.platform-android .divider-inset {
+  margin-left: 16px;
+}
+
+body.platform-android .divider-middle {
+  margin: 0 16px;
+}
+
+/* =====================
+   DIALOGS M3
+   ===================== */
+
+body.platform-android ion-alert {
+  --background: var(--md-surface-container-high);
+  --max-width: 312px;
+  --min-width: 280px;
+}
+
+body.platform-android ion-alert .alert-wrapper {
+  border-radius: var(--md-radius-xl);
+  box-shadow: var(--md-elevation-3);
+  padding: 24px;
+}
+
+body.platform-android ion-alert .alert-head {
+  padding: 0 0 16px;
+}
+
+body.platform-android ion-alert .alert-title {
+  font-family: var(--md-font-primary);
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--md-on-surface);
+}
+
+body.platform-android ion-alert .alert-message {
+  font-family: var(--md-font-secondary);
+  font-size: 14px;
+  color: var(--md-on-surface-variant);
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  padding: 0;
+}
+
+body.platform-android ion-alert .alert-button-group {
+  padding: 24px 0 0;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+body.platform-android ion-alert .alert-button {
+  font-family: var(--md-font-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  text-transform: none;
+  color: var(--md-primary-40);
+  border-radius: var(--md-radius-full);
+  padding: 10px 24px;
+  min-height: 40px;
+}
+
+body.platform-android ion-alert .alert-button:last-child {
+  background: var(--md-primary-40);
+  color: var(--md-primary-100);
+}
+
+/* =====================
+   MENU M3
+   ===================== */
+
+body.platform-android ion-popover {
+  --background: var(--md-surface-container);
+  --box-shadow: var(--md-elevation-2);
+  --width: auto;
+  --min-width: 112px;
+  --max-width: 280px;
+}
+
+body.platform-android ion-popover::part(content) {
+  border-radius: var(--md-radius-xs);
+  padding: 8px 0;
+}
+
+body.platform-android ion-popover ion-item {
+  --min-height: 48px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  font-family: var(--md-font-secondary);
+  font-size: 14px;
+  letter-spacing: 0.25px;
+}
+
+body.platform-android ion-popover ion-item ion-icon {
+  font-size: 24px;
+  margin-right: 12px;
+  color: var(--md-on-surface-variant);
+}
+
+/* =====================
+   SWITCHES M3
+   ===================== */
+
+body.platform-android ion-toggle {
+  --background: var(--md-surface-container-highest);
+  --background-checked: var(--md-primary-40);
+  --handle-background: var(--md-outline);
+  --handle-background-checked: var(--md-primary-100);
+  --handle-width: 16px;
+  --handle-height: 16px;
+  --handle-spacing: 6px;
+  width: 52px;
+  height: 32px;
+  padding: 0;
+  contain: none;
+}
+
+body.platform-android ion-toggle::part(track) {
+  border-radius: var(--md-radius-full);
+  border: 2px solid var(--md-outline);
+  transition: all var(--md-duration-medium2) var(--md-motion-standard);
+}
+
+body.platform-android ion-toggle.toggle-checked::part(track) {
+  border-color: transparent;
+}
+
+body.platform-android ion-toggle::part(handle) {
+  border-radius: var(--md-radius-full);
+  transition: all var(--md-duration-medium2) var(--md-motion-emphasized);
+}
+
+body.platform-android ion-toggle.toggle-checked::part(handle) {
+  width: 24px;
+  height: 24px;
+}
+
+/* Toggle con icono */
+body.platform-android ion-toggle.toggle-icon::part(handle)::after {
+  content: '';
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffffff'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z'/%3E%3C/svg%3E");
+  background-size: contain;
+  opacity: 0;
+  transition: opacity var(--md-duration-short4);
+}
+
+body.platform-android ion-toggle.toggle-icon.toggle-checked::part(handle)::after {
+  opacity: 1;
+}
+
+/* =====================
+   SLIDERS M3
+   ===================== */
+
+body.platform-android ion-range {
+  --bar-background: var(--md-primary-90);
+  --bar-background-active: var(--md-primary-40);
+  --bar-height: 4px;
+  --bar-border-radius: var(--md-radius-full);
+  --knob-background: var(--md-primary-40);
+  --knob-size: 20px;
+  --knob-box-shadow: var(--md-elevation-1);
+  padding: 8px 0;
+}
+
+body.platform-android ion-range::part(knob) {
+  transition: transform var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-range:active::part(knob) {
+  transform: scale(1.2);
+}
+
+/* Slider con value indicator */
+body.platform-android ion-range.range-has-pin::part(pin) {
+  background: var(--md-primary-40);
+  color: var(--md-primary-100);
+  border-radius: var(--md-radius-full) var(--md-radius-full) var(--md-radius-full) 0;
+  transform: rotate(45deg);
+}
+
+/* =====================
+   CHECKBOXES M3
+   ===================== */
+
+body.platform-android ion-checkbox {
+  --size: 18px;
+  --checkbox-background: transparent;
+  --checkbox-background-checked: var(--md-primary-40);
+  --border-color: var(--md-on-surface-variant);
+  --border-color-checked: transparent;
+  --border-width: 2px;
+  --border-radius: 2px;
+  --checkmark-color: var(--md-primary-100);
+}
+
+body.platform-android ion-checkbox::part(container) {
+  border-radius: 2px;
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+}
+
+/* Checkbox state layer */
+body.platform-android ion-checkbox::part(mark) {
+  stroke-width: 3px;
+}
+
+/* =====================
+   RADIO BUTTONS M3
+   ===================== */
+
+body.platform-android ion-radio {
+  --color: var(--md-on-surface-variant);
+  --color-checked: var(--md-primary-40);
+  width: 20px;
+  height: 20px;
+}
+
+body.platform-android ion-radio::part(container) {
+  border-width: 2px;
+  border-color: var(--md-on-surface-variant);
+  transition: all var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android ion-radio.radio-checked::part(container) {
+  border-color: var(--md-primary-40);
+}
+
+body.platform-android ion-radio::part(mark) {
+  background: var(--md-primary-40);
+  width: 10px;
+  height: 10px;
+  transition: transform var(--md-duration-short4) var(--md-motion-emphasized);
+}
+
+/* =====================
+   ICON BUTTONS M3
+   ===================== */
+
+body.platform-android .icon-button {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--md-radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: color var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android .icon-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: currentColor;
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity var(--md-duration-short4) var(--md-motion-standard);
+}
+
+body.platform-android .icon-button:hover::before {
+  opacity: 0.08;
+}
+
+body.platform-android .icon-button:active::before {
+  opacity: 0.12;
+}
+
+body.platform-android .icon-button ion-icon {
+  font-size: 24px;
+}
+
+/* Filled Icon Button */
+body.platform-android .icon-button-filled {
+  background: var(--md-primary-40);
+  color: var(--md-primary-100);
+}
+
+/* Tonal Icon Button */
+body.platform-android .icon-button-tonal {
+  background: var(--md-primary-90);
+  color: var(--md-primary-40);
+}
+
+/* Outlined Icon Button */
+body.platform-android .icon-button-outlined {
+  border: 1px solid var(--md-outline);
+}
+
+/* =====================
+   MODO OSCURO - MEJORAS
+   ===================== */
+
+body.platform-android.dark-mode {
+  /* Surface tones oscuras */
+  --md-surface: var(--md-neutral-6);
+  --md-surface-dim: var(--md-neutral-6);
+  --md-surface-bright: var(--md-neutral-24);
+  --md-surface-container-lowest: var(--md-neutral-4);
+  --md-surface-container-low: var(--md-neutral-10);
+  --md-surface-container: var(--md-neutral-12);
+  --md-surface-container-high: var(--md-neutral-17);
+  --md-surface-container-highest: var(--md-neutral-22);
+
+  /* On colors oscuras */
+  --md-on-surface: var(--md-neutral-90);
+  --md-on-surface-variant: var(--md-neutral-80);
+  --md-outline: var(--md-neutral-60);
+  --md-outline-variant: var(--md-neutral-30);
+
+  /* Primary colors for dark */
+  --md-primary-container: var(--md-primary-30);
+  --md-on-primary-container: var(--md-primary-90);
+}
+
+body.platform-android.dark-mode ion-tab-bar {
+  --background: var(--md-surface-container);
+}
+
+body.platform-android.dark-mode ion-tab-button::before {
+  background: var(--md-primary-30);
+}
+
+body.platform-android.dark-mode ion-toast {
+  --background: var(--md-neutral-90);
+  --color: var(--md-neutral-10);
+  --button-color: var(--md-primary-40);
+}
+
+body.platform-android.dark-mode ion-toggle {
+  --background: var(--md-surface-container-highest);
+  --background-checked: var(--md-primary-80);
+  --handle-background: var(--md-outline);
+  --handle-background-checked: var(--md-primary-20);
+}
+
+body.platform-android.dark-mode .divider,
+body.platform-android.dark-mode hr {
+  background: var(--md-outline-variant);
+}
+
+body.platform-android.dark-mode ion-alert .alert-wrapper {
+  background: var(--md-surface-container-high);
+}
+
+body.platform-android.dark-mode ion-alert .alert-title {
+  color: var(--md-on-surface);
+}
+
+body.platform-android.dark-mode ion-alert .alert-message {
+  color: var(--md-on-surface-variant);
+}
+
+body.platform-android.dark-mode ion-alert .alert-button {
+  color: var(--md-primary-80);
+}
+
+body.platform-android.dark-mode ion-alert .alert-button:last-child {
+  background: var(--md-primary-80);
+  color: var(--md-primary-20);
+}

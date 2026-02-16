@@ -1,0 +1,150 @@
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ecora-logo-text {
+  font-family: var(--ecora-font-primary);
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: #ffffff !important;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+}
+
+.ecora-logo-text:hover {
+  color: #ffffff !important;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  transform: scale(1.02);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.user-info:hover {
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.user-avatar-image {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 2px solid var(--ecora-blue-light);
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(144, 224, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-avatar-image:hover {
+  border-color: var(--ecora-white);
+  box-shadow: 0 4px 12px rgba(144, 224, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.user-avatar-initial {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 2px solid var(--ecora-blue-light);
+  background: linear-gradient(135deg, var(--ecora-blue-bright) 0%, var(--ecora-blue-secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ecora-font-primary);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ecora-white);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(144, 224, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.user-avatar-initial:hover {
+  border-color: var(--ecora-white);
+  box-shadow: 0 4px 12px rgba(144, 224, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.user-name {
+  color: #ffffff !important;
+  font-family: var(--ecora-font-primary);
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 10px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.user-name:hover {
+  color: #ffffff !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Estilos para los botones del navbar */
+ion-toolbar ion-button[fill="clear"] {
+  --color: var(--ecora-white);
+  --color-hover: var(--ecora-blue-light);
+  --background-hover: rgba(255, 255, 255, 0.12);
+  --border-radius: 12px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  transition: all 0.3s ease;
+}
+
+ion-toolbar ion-button[fill="clear"]:hover {
+  transform: translateY(-2px);
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+ion-toolbar ion-button[fill="clear"] ion-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+}
+
+ion-toolbar ion-button[fill="clear"]:hover ion-icon {
+  filter: drop-shadow(0 0 8px rgba(144, 224, 255, 0.6));
+  transform: scale(1.1);
+}
+
+/* Logo de Ecora en el navbar */
+ion-toolbar img[alt="Ecora Logo"] {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: all 0.3s ease;
+}
+
+ion-toolbar img[alt="Ecora Logo"]:hover {
+  filter: drop-shadow(0 4px 8px rgba(144, 224, 255, 0.4));
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .ecora-logo-text {
+    font-size: 1rem;
+  }
+
+  .user-info span {
+    display: none;
+  }
+
+  .user-info {
+    padding: 4px 8px;
+  }
+}

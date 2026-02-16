@@ -1,0 +1,246 @@
+/* ===========================================
+   WEB - Estilos optimizados para navegadores
+   =========================================== */
+
+/* Variables específicas para Web */
+body.platform-web {
+  /* Tipografía optimizada para pantallas */
+  --web-font-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --web-font-secondary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+
+  /* Bordes híbridos (entre Android e iOS) */
+  --web-radius-xs: 4px;
+  --web-radius-sm: 8px;
+  --web-radius-md: 12px;
+  --web-radius-lg: 16px;
+  --web-radius-xl: 24px;
+  --web-radius-full: 9999px;
+
+  /* Sombras suaves para monitores */
+  --web-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --web-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --web-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --web-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --web-shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+  --web-shadow-hover: 0 12px 24px rgba(0, 40, 115, 0.15);
+
+  /* Transiciones suaves para hover en desktop */
+  --web-transition-fast: 0.15s ease;
+  --web-transition-normal: 0.2s ease;
+  --web-transition-slow: 0.3s ease;
+  --web-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* =====================
+   COMPONENTES WEB
+   ===================== */
+
+/* Toolbar más compacto para web */
+body.platform-web ion-toolbar {
+  --min-height: 56px;
+}
+
+/* Cards con hover mejorado para mouse */
+body.platform-web ion-card,
+body.platform-web .ecora-card {
+  border-radius: var(--web-radius-lg);
+  box-shadow: var(--web-shadow-md);
+  transition: transform var(--web-transition-normal) var(--web-spring),
+              box-shadow var(--web-transition-normal);
+  cursor: pointer;
+}
+
+body.platform-web ion-card:hover,
+body.platform-web .ecora-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--web-shadow-hover);
+}
+
+body.platform-web ion-card:active,
+body.platform-web .ecora-card:active {
+  transform: translateY(-2px);
+  box-shadow: var(--web-shadow-lg);
+}
+
+/* Buttons optimizados para click de mouse */
+body.platform-web ion-button {
+  --border-radius: var(--web-radius-md);
+  cursor: pointer;
+  transition: all var(--web-transition-fast);
+}
+
+body.platform-web ion-button:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+
+body.platform-web ion-button:active {
+  transform: translateY(0);
+  filter: brightness(0.95);
+}
+
+/* FAB con efecto hover */
+body.platform-web ion-fab-button {
+  --border-radius: var(--web-radius-lg);
+  cursor: pointer;
+  transition: all var(--web-transition-normal) var(--web-spring);
+}
+
+body.platform-web ion-fab-button:hover {
+  transform: scale(1.08);
+  box-shadow: var(--web-shadow-xl);
+}
+
+/* Items con hover para mouse */
+body.platform-web ion-item {
+  border-radius: var(--web-radius-md);
+  cursor: pointer;
+  transition: background var(--web-transition-fast),
+              box-shadow var(--web-transition-fast);
+}
+
+body.platform-web ion-item:hover {
+  --background: rgba(0, 40, 115, 0.04);
+  box-shadow: var(--web-shadow-xs);
+}
+
+/* Section Items con interacciones de desktop */
+body.platform-web .section-item {
+  border-radius: var(--web-radius-lg);
+  box-shadow: var(--web-shadow-sm);
+  cursor: pointer;
+  transition: all var(--web-transition-normal) var(--web-spring);
+}
+
+body.platform-web .section-item:hover {
+  transform: translateY(-3px) scale(1.005);
+  box-shadow: var(--web-shadow-hover);
+}
+
+body.platform-web .section-item:active {
+  transform: translateY(-1px) scale(1);
+  box-shadow: var(--web-shadow-md);
+}
+
+/* Chips con hover */
+body.platform-web ion-chip {
+  cursor: pointer;
+  transition: all var(--web-transition-fast);
+}
+
+body.platform-web ion-chip:hover {
+  filter: brightness(0.95);
+  transform: translateY(-1px);
+}
+
+/* Search bar con focus mejorado */
+body.platform-web ion-searchbar {
+  --border-radius: var(--web-radius-lg);
+  transition: box-shadow var(--web-transition-fast);
+}
+
+body.platform-web ion-searchbar:hover {
+  --box-shadow: var(--web-shadow-sm);
+}
+
+body.platform-web ion-searchbar.searchbar-has-focus {
+  --box-shadow: 0 0 0 3px rgba(6, 118, 232, 0.2);
+}
+
+/* Quick Access mejorado para desktop */
+body.platform-web .quick-access-card {
+  border-radius: var(--web-radius-lg);
+  cursor: pointer;
+  transition: all var(--web-transition-normal) var(--web-spring);
+}
+
+body.platform-web .quick-access-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--web-shadow-hover);
+}
+
+body.platform-web .quick-access-item {
+  cursor: pointer;
+  transition: all var(--web-transition-fast);
+}
+
+body.platform-web .quick-access-item:hover {
+  transform: translateX(4px);
+  box-shadow: var(--web-shadow-md);
+}
+
+/* Tooltips y estados de focus visibles para accesibilidad */
+body.platform-web ion-button:focus-visible,
+body.platform-web ion-item:focus-visible,
+body.platform-web ion-searchbar:focus-visible,
+body.platform-web .section-item:focus-visible {
+  outline: 2px solid var(--ecora-blue-secondary);
+  outline-offset: 2px;
+}
+
+/* Cursor pointer para elementos interactivos */
+body.platform-web .favorite-button,
+body.platform-web .expand-button,
+body.platform-web .sync-button,
+body.platform-web .desktop-edit-button,
+body.platform-web .desktop-delete-button {
+  cursor: pointer;
+}
+
+/* Mejoras de responsividad para desktop */
+@media (min-width: 1024px) {
+  body.platform-web .content-header {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  body.platform-web ion-content {
+    --padding-start: 24px;
+    --padding-end: 24px;
+  }
+
+  body.platform-web ion-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+}
+
+/* Grid de secciones para pantallas grandes */
+@media (min-width: 1280px) {
+  body.platform-web .sections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 16px;
+  }
+}
+
+/* =====================
+   MODO OSCURO WEB
+   ===================== */
+
+body.platform-web.dark-mode {
+  --web-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --web-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --web-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.35);
+  --web-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+  --web-shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.45);
+  --web-shadow-hover: 0 12px 24px rgba(59, 130, 246, 0.25);
+}
+
+body.platform-web.dark-mode ion-item:hover {
+  --background: rgba(59, 130, 246, 0.08);
+}
+
+body.platform-web.dark-mode .section-item:hover {
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.2);
+}
+
+body.platform-web.dark-mode .quick-access-card:hover,
+body.platform-web.dark-mode .quick-access-item:hover {
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
+}
+
+body.platform-web.dark-mode ion-searchbar.searchbar-has-focus {
+  --box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
