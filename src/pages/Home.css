@@ -255,6 +255,55 @@ ion-alert .alert-button.alert-button-role-confirm {
   }
 }
 
+/* =====================
+   MENÚ DE USUARIO (ActionSheet)
+   ===================== */
+
+.user-menu-action-sheet .action-sheet-group {
+  background: #ffffff !important;
+}
+
+.user-menu-action-sheet .action-sheet-title {
+  font-family: var(--ecora-font-primary) !important;
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
+  color: var(--ecora-blue-primary) !important;
+  padding: 20px 16px 4px 16px !important;
+}
+
+.user-menu-action-sheet .action-sheet-sub-title {
+  font-family: var(--ecora-font-secondary) !important;
+  font-size: 0.85rem !important;
+  color: var(--ecora-blue-secondary) !important;
+  padding: 0 16px 16px 16px !important;
+}
+
+.user-menu-action-sheet .action-sheet-button {
+  font-family: var(--ecora-font-primary) !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  color: var(--ecora-blue-primary) !important;
+  min-height: 56px !important;
+}
+
+.user-menu-action-sheet .action-sheet-button .action-sheet-icon {
+  color: var(--ecora-blue-secondary) !important;
+  font-size: 1.4rem !important;
+}
+
+.user-menu-action-sheet .action-sheet-destructive {
+  color: #c62828 !important;
+}
+
+.user-menu-action-sheet .action-sheet-destructive .action-sheet-icon {
+  color: #c62828 !important;
+}
+
+.user-menu-action-sheet .action-sheet-cancel {
+  font-weight: 600 !important;
+  color: var(--ecora-blue-primary) !important;
+}
+
 /* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   * {
