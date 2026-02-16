@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Browser } from '@capacitor/browser';
+import { Capacitor } from '@capacitor/core';
 import {
   IonItem,
   IonLabel,
@@ -52,14 +54,36 @@ const SectionItem = ({
     setIsExpanded(!isExpanded);
   };
 
+  // Función para abrir URLs (usa app nativa en Android/iOS)
+  const openUrl = async (url) => {
+    if (Capacitor.isNativePlatform()) {
+      // En Android/iOS, usar Browser plugin que abre la app nativa de Drive
+      await Browser.open({ url, windowName: '_system' });
+    } else {
+      // En web, abrir en nueva pestaña
+      window.open(url, '_blank');
+    }
+  };
+
   const handleViewDetail = (e) => {
     e.stopPropagation();
-    // Si tiene enlace de Google Drive, abrirlo en nueva pestaña
+    // Si tiene enlace de Google Drive, abrirlo
     if (section.driveMetadata && section.driveMetadata.webViewLink) {
-      window.open(section.driveMetadata.webViewLink, '_blank');
+      openUrl(section.driveMetadata.webViewLink);
     } else {
       // Si no tiene enlace de Drive, navegar a la página de detalle
       history.push(`/section/${section.id}`);
+    }
+  };
+
+  // Handler para clic en el item
+  const handleItemClick = (e) => {
+    if (hasChildren) {
+      // Carpetas: desplegar/colapsar
+      toggleExpand();
+    } else {
+      // Archivos: misma función que el botón de la derecha
+      handleViewDetail(e);
     }
   };
 
@@ -133,8 +157,8 @@ const SectionItem = ({
         <IonItem
           className={`section-item level-${level} ${hasChildren ? 'is-folder' : 'is-file'}`}
           style={indentStyle}
-          button={hasChildren}
-          onClick={hasChildren ? toggleExpand : undefined}
+          button={true}
+          onClick={handleItemClick}
         >
           {/* Icono de expansión */}
           {hasChildren && (
