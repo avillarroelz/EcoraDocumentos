@@ -601,9 +601,9 @@ const Home = ({ user, onLogout }) => {
         <div className="content-container">
           {/* Header de contenido */}
           <div className="content-header">
-            <h1 className="page-title">Sistema de Gestión de Información <span style={{ fontSize: '0.6em', fontWeight: '400' }}>(SGI)</span></h1>
-            <p className="page-subtitle ecora-tagline">
-              Encuentra todo lo que quieras en un solo clic
+            <h1 className="page-title">Ecora Clic</h1>
+            <p className="page-subtitle">
+              Gestión documental inteligente
             </p>
           </div>
 
