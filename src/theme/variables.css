@@ -15,9 +15,9 @@
   --ecora-blue-light-rgb: 144, 224, 255;
   --ecora-coral-rgb: 255, 153, 118;
 
-  /* Tipografía Ecora */
-  --ecora-font-primary: 'IBM Plex Mono', monospace;
-  --ecora-font-secondary: 'Spectral', serif;
+  /* Tipografía Ecora - Elegante y Profesional */
+  --ecora-font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --ecora-font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Ionic Theme Variables con colores Ecora */
   --ion-color-primary: var(--ecora-blue-primary);

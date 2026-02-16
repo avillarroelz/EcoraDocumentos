@@ -7,11 +7,15 @@
   --background: white;
   --border-color: var(--ecora-blue-light);
   --color: var(--ecora-blue-primary);
-  --padding-start: 0;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --inner-padding-end: 8px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 6px 0;
-  border-radius: 12px;
+  margin: 12px 0;
+  border-radius: 14px;
   box-shadow: 0 2px 8px rgba(0, 40, 115, 0.08);
   overflow: hidden;
 }
@@ -22,40 +26,42 @@
   transform: translateY(-2px);
 }
 
-/* Niveles de profundidad con diferentes colores sutiles */
-.section-item.level-0 {
+/* Carpetas (con hijos) - Borde salmón/coral */
+.section-item.is-folder {
   --border-width: 0 0 0 5px;
   --border-style: solid;
-  --border-color: var(--ecora-blue-primary);
+  --border-color: var(--ecora-coral);
   font-weight: 600;
-  box-shadow: 0 3px 12px rgba(0, 40, 115, 0.12);
+  box-shadow: 0 3px 12px rgba(255, 153, 118, 0.15);
 }
 
-.section-item.level-0:hover {
-  box-shadow: 0 6px 20px rgba(0, 40, 115, 0.2);
+.section-item.is-folder:hover {
+  box-shadow: 0 6px 20px rgba(255, 153, 118, 0.25);
 }
 
-.section-item.level-1 {
+/* Archivos (sin hijos) - Borde azul */
+.section-item.is-file {
   --border-width: 0 0 0 4px;
   --border-style: solid;
   --border-color: var(--ecora-blue-secondary);
-  background: linear-gradient(to right, rgba(6, 118, 232, 0.02) 0%, white 2%);
+  box-shadow: 0 2px 8px rgba(6, 118, 232, 0.1);
 }
 
-.section-item.level-2 {
-  --border-width: 0 0 0 3px;
-  --border-style: solid;
-  --border-color: var(--ecora-blue-light);
-  background: linear-gradient(to right, rgba(144, 224, 255, 0.03) 0%, white 2%);
+.section-item.is-file:hover {
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.2);
 }
 
+/* Niveles de profundidad - ajustes sutiles */
+.section-item.level-0 {
+  font-weight: 600;
+}
+
+.section-item.level-1,
+.section-item.level-2,
 .section-item.level-3,
 .section-item.level-4,
 .section-item.level-5 {
-  --border-width: 0 0 0 2px;
-  --border-style: solid;
-  --border-color: rgba(144, 224, 255, 0.5);
-  background: linear-gradient(to right, rgba(144, 224, 255, 0.02) 0%, white 2%);
+  --border-width: 0 0 0 4px;
 }
 
 /* Línea de jerarquía vertical */
@@ -81,15 +87,19 @@
   font-weight: 600;
   font-size: 1rem;
   color: var(--ecora-blue-primary);
-  margin: 0.5rem 0 0.25rem 0;
+  margin: 0;
+  padding-top: 4px;
+  line-height: 1.4;
 }
 
 .section-description {
   font-family: var(--ecora-font-secondary);
-  font-size: 0.875rem;
-  color: rgba(0, 40, 115, 0.7);
-  margin: 0.25rem 0 0.5rem 0;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  color: rgba(0, 40, 115, 0.65);
+  margin: 0;
+  padding-top: 6px;
+  padding-bottom: 4px;
+  line-height: 1.5;
 }
 
 /* Icono de expansión */
@@ -185,7 +195,7 @@
 /* Lista de hijos */
 .children-list {
   padding: 0;
-  margin: 0;
+  margin: 4px 0 0 0;
   background: transparent;
 }
 
@@ -237,15 +247,34 @@ ion-item-option {
 
 /* Responsive */
 @media (max-width: 768px) {
+  .section-item {
+    margin: 10px 0;
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
   .section-title {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    padding-top: 2px;
   }
 
   .section-description {
     font-size: 0.8rem;
+    padding-top: 8px;
+    padding-bottom: 6px;
+  }
+
+  .children-list {
+    margin-top: 6px;
   }
 
   .add-child-button ion-icon {
     font-size: 1.25rem;
+  }
+
+  .expand-icon {
+    margin-right: 8px;
   }
 }

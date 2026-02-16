@@ -11,9 +11,10 @@ import {
   IonList,
   IonText,
   IonButton,
-  IonAlert
+  IonAlert,
+  IonActionSheet
 } from '@ionic/react';
-import { addOutline, refreshOutline, logoGoogle, logOutOutline, saveOutline, cloudOutline, createOutline, eyeOutline } from 'ionicons/icons';
+import { addOutline, refreshOutline, logOutOutline, saveOutline, createOutline, eyeOutline, folderOpenOutline } from 'ionicons/icons';
 import SectionItem from '../components/SectionItem';
 import AddSectionModal from '../components/AddSectionModal';
 import SearchBar from '../components/SearchBar';
@@ -32,6 +33,7 @@ const Home = ({ user, onLogout }) => {
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
   const [showGoogleDriveModal, setShowGoogleDriveModal] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   // Estados para drag & drop
   const [draggedId, setDraggedId] = useState(null);
@@ -401,6 +403,7 @@ const Home = ({ user, onLogout }) => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary">
+          {/* Logo - siempre visible */}
           <div slot="start" style={{ display: 'flex', alignItems: 'center', paddingLeft: '16px' }}>
             <img
               src="/assets/ecora-logo-white.png"
@@ -408,95 +411,191 @@ const Home = ({ user, onLogout }) => {
               style={{ height: '40px', objectFit: 'contain' }}
             />
           </div>
-          <IonTitle>
-            <div className="header-title">
-              <span className="ecora-logo-text">Sistema de Gestión</span>
-            </div>
-          </IonTitle>
-          <IonButton
-            slot="end"
-            fill="clear"
-            onClick={() => setShowGoogleDriveModal(true)}
-            title="Importar desde Google Drive"
-            style={{ marginRight: '8px', minWidth: '40px' }}
-          >
-            <img
-              src="https://www.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png"
-              alt="Google Drive"
-              style={{ width: '24px', height: '24px' }}
-            />
-          </IonButton>
-          {/* Botón para alternar modo de edición (solo admin) */}
-          {isAdmin && (
-            <IonButton
-              slot="end"
-              fill={editMode ? "solid" : "clear"}
-              color={editMode ? "warning" : "light"}
-              onClick={() => setEditMode(!editMode)}
-              title={editMode ? "Desactivar modo de edición" : "Activar modo de edición"}
-              style={{ marginRight: '8px' }}
-            >
-              <IonIcon icon={editMode ? createOutline : eyeOutline} slot="icon-only" />
-            </IonButton>
+
+          {/* Título - solo en desktop */}
+          {isDesktop && (
+            <IonTitle>
+              <div className="header-title">
+                <span className="ecora-logo-text">Sistema de Gestión</span>
+              </div>
+            </IonTitle>
           )}
-          {/* Botón para guardar como predeterminados (solo admin y modo edición) */}
-          {isAdmin && editMode && (
-            <IonButton
+
+          {/* === MÓVIL: Solo avatar que abre menú === */}
+          {!isDesktop && (
+            <div
               slot="end"
-              fill="clear"
-              color="light"
-              onClick={handleSaveAsDefaults}
-              title="Guardar estructura actual como predeterminada para nuevos usuarios"
-              style={{ marginRight: '8px' }}
+              onClick={() => setShowUserMenu(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginRight: '16px',
+                cursor: 'pointer'
+              }}
             >
-              <IonIcon icon={saveOutline} slot="icon-only" />
-            </IonButton>
-          )}
-          {/* Avatar y nombre del usuario */}
-          <div slot="end" className="user-info" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-            {user.picture && (
-              <img
-                src={user.picture}
-                alt={user.name}
-                style={{
-                  width: '32px',
-                  height: '32px',
+              {user.picture ? (
+                <img
+                  src={user.picture}
+                  alt={user.name}
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    border: '2px solid var(--ecora-blue-light)',
+                    objectFit: 'cover'
+                  }}
+                />
+              ) : (
+                <div style={{
+                  width: '40px',
+                  height: '40px',
                   borderRadius: '50%',
-                  marginRight: '8px',
-                  border: '2px solid var(--ecora-blue-light)'
-                }}
-              />
-            )}
-            <span style={{
-              color: 'white',
-              fontFamily: 'IBM Plex Mono, monospace',
-              fontSize: '14px',
-              marginRight: '10px'
-            }}>
-              {user.name}
-            </span>
-          </div>
-          {/* Botón de Logout */}
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="light"
-            onClick={onLogout}
-            title="Cerrar sesión"
-            style={{ marginRight: '8px' }}
-          >
-            <IonIcon icon={logOutOutline} slot="icon-only" />
-          </IonButton>
-          <IonButton
-            slot="end"
-            fill="clear"
-            onClick={handleResetData}
-            title="Restablecer datos de ejemplo"
-          >
-            <IonIcon icon={refreshOutline} />
-          </IonButton>
+                  border: '2px solid var(--ecora-blue-light)',
+                  background: 'var(--ecora-coral)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  fontWeight: 'bold',
+                  fontSize: '18px',
+                  fontFamily: 'var(--ecora-font-primary)'
+                }}>
+                  {(user.name || 'U').charAt(0).toUpperCase()}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* === DESKTOP: Todos los botones visibles === */}
+          {isDesktop && (
+            <>
+              <IonButton
+                slot="end"
+                fill="clear"
+                onClick={() => setShowGoogleDriveModal(true)}
+                title="Importar desde Google Drive"
+                style={{ marginRight: '8px', minWidth: '40px' }}
+              >
+                <img
+                  src="https://www.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png"
+                  alt="Google Drive"
+                  style={{ width: '24px', height: '24px' }}
+                />
+              </IonButton>
+              {/* Botón para alternar modo de edición (solo admin) */}
+              {isAdmin && (
+                <IonButton
+                  slot="end"
+                  fill={editMode ? "solid" : "clear"}
+                  color={editMode ? "warning" : "light"}
+                  onClick={() => setEditMode(!editMode)}
+                  title={editMode ? "Desactivar modo de edición" : "Activar modo de edición"}
+                  style={{ marginRight: '8px' }}
+                >
+                  <IonIcon icon={editMode ? createOutline : eyeOutline} slot="icon-only" />
+                </IonButton>
+              )}
+              {/* Botón para guardar como predeterminados (solo admin y modo edición) */}
+              {isAdmin && editMode && (
+                <IonButton
+                  slot="end"
+                  fill="clear"
+                  color="light"
+                  onClick={handleSaveAsDefaults}
+                  title="Guardar estructura actual como predeterminada para nuevos usuarios"
+                  style={{ marginRight: '8px' }}
+                >
+                  <IonIcon icon={saveOutline} slot="icon-only" />
+                </IonButton>
+              )}
+              {/* Avatar y nombre del usuario */}
+              <div slot="end" className="user-info" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
+                {user.picture && (
+                  <img
+                    src={user.picture}
+                    alt={user.name}
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      marginRight: '8px',
+                      border: '2px solid var(--ecora-blue-light)'
+                    }}
+                  />
+                )}
+                <span style={{
+                  color: 'white',
+                  fontFamily: 'var(--ecora-font-primary)',
+                  fontSize: '14px',
+                  marginRight: '10px'
+                }}>
+                  {user.name}
+                </span>
+              </div>
+              {/* Botón de Logout */}
+              <IonButton
+                slot="end"
+                fill="clear"
+                color="light"
+                onClick={onLogout}
+                title="Cerrar sesión"
+                style={{ marginRight: '8px' }}
+              >
+                <IonIcon icon={logOutOutline} slot="icon-only" />
+              </IonButton>
+              <IonButton
+                slot="end"
+                fill="clear"
+                onClick={handleResetData}
+                title="Restablecer datos de ejemplo"
+              >
+                <IonIcon icon={refreshOutline} />
+              </IonButton>
+            </>
+          )}
         </IonToolbar>
       </IonHeader>
+
+      {/* ActionSheet del menú de usuario (móvil) */}
+      <IonActionSheet
+        isOpen={showUserMenu}
+        onDidDismiss={() => setShowUserMenu(false)}
+        cssClass="user-menu-action-sheet"
+        header={user?.name || 'Usuario'}
+        subHeader={user?.email}
+        buttons={[
+          {
+            text: 'Importar desde Google Drive',
+            icon: folderOpenOutline,
+            handler: () => setShowGoogleDriveModal(true)
+          },
+          ...(isAdmin ? [{
+            text: editMode ? 'Desactivar modo edición' : 'Activar modo edición',
+            icon: editMode ? eyeOutline : createOutline,
+            handler: () => setEditMode(!editMode)
+          }] : []),
+          ...(isAdmin && editMode ? [{
+            text: 'Guardar como predeterminados',
+            icon: saveOutline,
+            handler: handleSaveAsDefaults
+          }] : []),
+          {
+            text: 'Restablecer datos',
+            icon: refreshOutline,
+            handler: handleResetData
+          },
+          {
+            text: 'Cerrar sesión',
+            icon: logOutOutline,
+            role: 'destructive',
+            handler: onLogout
+          },
+          {
+            text: 'Cancelar',
+            role: 'cancel'
+          }
+        ]}
+      />
 
       <IonContent className="home-content">
         <div className="content-container">

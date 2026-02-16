@@ -63,9 +63,9 @@ const SectionItem = ({
     }
   };
 
-  // Calcular indentación basada en el nivel
+  // Calcular indentación basada en el nivel (reducida)
   const indentStyle = {
-    paddingLeft: `${level * 1.5 + 1}rem`
+    paddingLeft: level > 0 ? `${level * 0.5}rem` : '0'
   };
 
   // Función para resaltar texto de búsqueda
@@ -131,7 +131,7 @@ const SectionItem = ({
     >
       <IonItemSliding>
         <IonItem
-          className={`section-item level-${level}`}
+          className={`section-item level-${level} ${hasChildren ? 'is-folder' : 'is-file'}`}
           style={indentStyle}
           button={hasChildren}
           onClick={hasChildren ? toggleExpand : undefined}
@@ -145,9 +145,7 @@ const SectionItem = ({
             />
           )}
 
-          {/* Línea vertical de jerarquía */}
-          {level > 0 && <div className="hierarchy-line" />}
-
+          
           {/* Título de la sección */}
           <IonLabel>
             <h3 className="section-title">
