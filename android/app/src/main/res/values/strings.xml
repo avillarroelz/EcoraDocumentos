@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Ecora</string>
+    <string name="title_activity_main">Ecora</string>
+    <string name="package_name">com.ecora.app</string>
+    <string name="custom_url_scheme">com.ecora.app</string>
+    <!-- Google Sign-In Web Client ID (para plugin GoogleAuth) -->
+    <string name="server_client_id">331686188304-ucgqkqh4q7qj5lqrl7epn52i85ka3n0d.apps.googleusercontent.com</string>
+</resources>

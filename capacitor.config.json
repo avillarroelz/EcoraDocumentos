@@ -2,8 +2,19 @@
   "appId": "com.ecora.app",
   "appName": "Ecora",
   "webDir": "dist",
-  "bundledWebRuntime": false,
   "server": {
-    "androidScheme": "https"
+    "androidScheme": "http",
+    "cleartext": true
+  },
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email",
+        "https://www.googleapis.com/auth/drive.readonly"
+      ],
+      "serverClientId": "331686188304-ucgqkqh4q7qj5lqrl7epn52i85ka3n0d.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
   }
 }
