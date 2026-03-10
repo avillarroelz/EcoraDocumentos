@@ -287,6 +287,145 @@ ion-alert .alert-button.alert-button-role-confirm {
   color: var(--ecora-blue-primary) !important;
 }
 
+/* =====================
+   BANNER DE SELECCIÓN MÚLTIPLE
+   ===================== */
+.selection-banner {
+  background: linear-gradient(135deg, var(--ecora-blue-primary) 0%, var(--ecora-blue-secondary) 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  box-shadow: 0 4px 16px rgba(0, 40, 115, 0.25);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selection-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.selection-info ion-icon {
+  font-size: 1.25rem;
+}
+
+.selection-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.selection-actions ion-button {
+  --color: white;
+  --padding-start: 8px;
+  --padding-end: 8px;
+  font-size: 0.8rem;
+  text-transform: none;
+}
+
+.selection-actions ion-button ion-icon {
+  font-size: 1rem;
+  margin-right: 4px;
+}
+
+/* =====================
+   FAB MENU DE EDICIÓN (MÓVIL)
+   ===================== */
+.edit-fab-menu ion-fab-button {
+  --background: var(--ecora-blue-primary);
+  --background-activated: var(--ecora-blue-secondary);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edit-fab-menu ion-fab-button.fab-expanded {
+  --background: var(--ecora-coral);
+  transform: rotate(45deg);
+}
+
+.edit-fab-menu ion-fab-list ion-fab-button {
+  --background: var(--ecora-blue-secondary);
+  --box-shadow: 0 4px 12px rgba(0, 40, 115, 0.3);
+  margin: 8px 0;
+}
+
+.edit-fab-menu ion-fab-button[data-action="add"] {
+  --background: var(--ecora-blue-bright);
+}
+
+.edit-fab-menu ion-fab-button[data-action="sync"] {
+  --background: #4caf50;
+}
+
+.edit-fab-menu ion-fab-button[data-action="move"] {
+  --background: var(--ecora-coral);
+}
+
+.edit-fab-menu ion-fab-button[data-action="delete"] {
+  --background: #f44336;
+}
+
+.edit-fab-menu ion-fab-button.fab-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Animación de los items del FAB */
+.edit-fab-menu ion-fab-list ion-fab-button {
+  animation: fabItemIn 0.2s ease-out backwards;
+}
+
+.edit-fab-menu ion-fab-list ion-fab-button:nth-child(1) { animation-delay: 0ms; }
+.edit-fab-menu ion-fab-list ion-fab-button:nth-child(2) { animation-delay: 50ms; }
+.edit-fab-menu ion-fab-list ion-fab-button:nth-child(3) { animation-delay: 100ms; }
+.edit-fab-menu ion-fab-list ion-fab-button:nth-child(4) { animation-delay: 150ms; }
+
+@keyframes fabItemIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive para el banner */
+@media (max-width: 480px) {
+  .selection-banner {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .selection-info {
+    font-size: 0.85rem;
+  }
+
+  .selection-actions ion-button {
+    font-size: 0.75rem;
+    --padding-start: 6px;
+    --padding-end: 6px;
+  }
+}
+
 /* Mejoras de accesibilidad */
 @media (prefers-reduced-motion: reduce) {
   * {
