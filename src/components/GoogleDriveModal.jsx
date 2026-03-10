@@ -407,7 +407,7 @@ const GoogleDriveModal = ({ isOpen, onClose, onImport }) => {
                             {selectedDrive?.id === drive.id ? 'Seleccionada' : 'Seleccionar'}
                           </button>
                         </div>
-                      )))
+                      ))
                     )}
                   </div>
                 ) : (

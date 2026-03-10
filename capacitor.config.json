@@ -3,8 +3,19 @@
   "appName": "Ecora",
   "webDir": "dist",
   "server": {
-    "androidScheme": "http",
-    "cleartext": true
+    "androidScheme": "https",
+    "cleartext": true,
+    "allowNavigation": [
+      "ecora-prod-v3.eba-tdqgyq2z.us-east-1.elasticbeanstalk.com"
+    ]
+  },
+  "android": {
+    "buildOptions": {
+      "releaseType": "APK"
+    }
+  },
+  "ios": {
+    "scheme": "Ecora"
   },
   "plugins": {
     "GoogleAuth": {
@@ -15,6 +26,16 @@
       ],
       "serverClientId": "331686188304-ucgqkqh4q7qj5lqrl7epn52i85ka3n0d.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
+    },
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#002873",
+      "showSpinner": false,
+      "androidScaleType": "CENTER_CROP"
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#002873"
     }
   }
 }
