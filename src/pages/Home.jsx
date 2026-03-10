@@ -7,6 +7,7 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonFabList,
   IonIcon,
   IonList,
   IonText,
@@ -14,11 +15,28 @@ import {
   IonAlert,
   IonActionSheet
 } from '@ionic/react';
-import { addOutline, refreshOutline, logOutOutline, saveOutline, createOutline, eyeOutline, folderOpenOutline } from 'ionicons/icons';
+import {
+  addOutline,
+  refreshOutline,
+  logOutOutline,
+  saveOutline,
+  createOutline,
+  eyeOutline,
+  folderOpenOutline,
+  menuOutline,
+  moveOutline,
+  trashOutline,
+  syncOutline,
+  closeOutline,
+  checkmarkDoneOutline
+} from 'ionicons/icons';
+import { Capacitor } from '@capacitor/core';
 import SectionItem from '../components/SectionItem';
 import AddSectionModal from '../components/AddSectionModal';
 import SearchBar from '../components/SearchBar';
 import GoogleDriveModal from '../components/GoogleDriveModal';
+import MoveSectionModal from '../components/MoveSectionModal';
+import SyncFolderModal from '../components/SyncFolderModal';
 import './Home.css';
 
 const Home = ({ user, onLogout }) => {
@@ -40,8 +58,9 @@ const Home = ({ user, onLogout }) => {
   const [draggedLevel, setDraggedLevel] = useState(null);
   const [dropTargetId, setDropTargetId] = useState(null);
 
-  // Detectar si es escritorio o móvil
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+  // Detectar si es escritorio o móvil (plataforma nativa siempre es "móvil")
+  const isNative = Capacitor.isNativePlatform();
+  const [isDesktop, setIsDesktop] = useState(!isNative && window.innerWidth >= 768);
 
   // Lista de administradores que pueden configurar datos predeterminados
   const ADMIN_EMAILS = ['avillarroel@ecora.cl'];
@@ -50,15 +69,26 @@ const Home = ({ user, onLogout }) => {
   // Estado del modo de edición (solo relevante para admins)
   const [editMode, setEditMode] = useState(false);
 
-  // Detectar cambios en el tamaño de la ventana
+  // Estados para selección múltiple
+  const [selectedItems, setSelectedItems] = useState(new Set());
+  const [fabExpanded, setFabExpanded] = useState(false);
+
+  // Estados para modales de mover y sincronizar
+  const [showMoveModal, setShowMoveModal] = useState(false);
+  const [showSyncModal, setShowSyncModal] = useState(false);
+  const [sectionToSync, setSectionToSync] = useState(null);
+
+  // Detectar cambios en el tamaño de la ventana (solo si no es nativo)
   useEffect(() => {
+    if (isNative) return; // En móvil nativo, siempre es "móvil"
+
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isNative]);
 
   // Cargar datos desde localStorage al iniciar (específicos por usuario)
   useEffect(() => {
@@ -315,11 +345,13 @@ const Home = ({ user, onLogout }) => {
   };
 
   const confirmDelete = () => {
-    if (deleteId) {
+    if (deleteId === 'multiple') {
+      confirmDeleteMultiple();
+    } else if (deleteId) {
       setSections(deleteSection(sections, deleteId));
+      setShowDeleteAlert(false);
+      setDeleteId(null);
     }
-    setShowDeleteAlert(false);
-    setDeleteId(null);
   };
 
   const handleSaveSection = (data) => {
@@ -397,6 +429,199 @@ const Home = ({ user, onLogout }) => {
     setDraggedId(null);
     setDraggedLevel(null);
     setDropTargetId(null);
+  };
+
+  // === FUNCIONES DE SELECCIÓN MÚLTIPLE ===
+  const toggleSelectItem = (id) => {
+    setSelectedItems(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const clearSelection = () => {
+    setSelectedItems(new Set());
+    setFabExpanded(false);
+  };
+
+  // Obtener todos los IDs recursivamente
+  const getAllIds = (items) => {
+    return items.flatMap(i => [i.id, ...getAllIds(i.children || [])]);
+  };
+
+  const selectAll = () => {
+    setSelectedItems(new Set(getAllIds(sections)));
+  };
+
+  // Limpiar selección cuando se desactiva el modo edición
+  useEffect(() => {
+    if (!editMode) {
+      clearSelection();
+    }
+  }, [editMode]);
+
+  // Verificar si hay items seleccionados con driveMetadata
+  const hasSelectedWithDrive = () => {
+    const checkDrive = (items) => {
+      for (const item of items) {
+        if (selectedItems.has(item.id) && item.driveMetadata?.id) {
+          return true;
+        }
+        if (item.children && checkDrive(item.children)) {
+          return true;
+        }
+      }
+      return false;
+    };
+    return checkDrive(sections);
+  };
+
+  // Obtener la primera sección seleccionada con driveMetadata
+  const getSelectedSectionForSync = () => {
+    const findFirst = (items) => {
+      for (const item of items) {
+        if (selectedItems.has(item.id) && item.driveMetadata?.id) {
+          return item;
+        }
+        if (item.children) {
+          const found = findFirst(item.children);
+          if (found) return found;
+        }
+      }
+      return null;
+    };
+    return findFirst(sections);
+  };
+
+  // Aplanar las secciones para el modal de mover
+  const flattenSections = (items, parentId = null) => {
+    return items.flatMap(item => {
+      const hasChildren = item.children && item.children.length > 0;
+      return [
+        {
+          ...item,
+          parentId,
+          type: hasChildren ? 'folder' : 'file'
+        },
+        ...flattenSections(item.children || [], item.id)
+      ];
+    });
+  };
+
+  // === ACCIONES MASIVAS ===
+  const handleDeleteSelected = () => {
+    if (selectedItems.size === 0) return;
+    setDeleteId('multiple');
+    setShowDeleteAlert(true);
+  };
+
+  const confirmDeleteMultiple = () => {
+    setSections(prev => {
+      const deleteRecursive = (items) =>
+        items
+          .filter(item => !selectedItems.has(item.id))
+          .map(item => ({
+            ...item,
+            children: deleteRecursive(item.children || [])
+          }));
+      return deleteRecursive(prev);
+    });
+    clearSelection();
+    setShowDeleteAlert(false);
+    setDeleteId(null);
+  };
+
+  // Handler para mover secciones
+  const handleMoveSection = async (sectionId, newParentId) => {
+    // Encontrar y extraer la sección a mover
+    let sectionToMove = null;
+
+    const extractSection = (items) => {
+      return items.filter(item => {
+        if (item.id === sectionId) {
+          sectionToMove = { ...item };
+          return false; // Remover de esta ubicación
+        }
+        if (item.children) {
+          item.children = extractSection(item.children);
+        }
+        return true;
+      });
+    };
+
+    let newSections = extractSection([...sections]);
+
+    if (!sectionToMove) return;
+
+    // Insertar en la nueva ubicación
+    if (newParentId === null) {
+      // Mover a raíz
+      newSections = [...newSections, sectionToMove];
+    } else {
+      // Mover dentro de una carpeta
+      const insertInParent = (items) => {
+        return items.map(item => {
+          if (item.id === newParentId) {
+            return {
+              ...item,
+              children: [...(item.children || []), sectionToMove]
+            };
+          }
+          if (item.children) {
+            return {
+              ...item,
+              children: insertInParent(item.children)
+            };
+          }
+          return item;
+        });
+      };
+      newSections = insertInParent(newSections);
+    }
+
+    setSections(newSections);
+    clearSelection();
+  };
+
+  // Handler para sincronizar con Google Drive
+  const handleSyncFolder = async (folderId, driveId, recursive) => {
+    // Aquí iría la lógica de sincronización con la API de Google Drive
+    // Por ahora, simular la sincronización
+    console.log('Sincronizando carpeta:', folderId, 'con Drive ID:', driveId);
+
+    // Simular delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    return {
+      filesUpdated: Math.floor(Math.random() * 10),
+      foldersUpdated: Math.floor(Math.random() * 5)
+    };
+  };
+
+  // Abrir modal de sincronización
+  const openSyncModal = () => {
+    // Primero buscar si hay uno con Drive
+    let section = getSelectedSectionForSync();
+
+    // Si no hay con Drive, tomar el primero seleccionado
+    if (!section && selectedItems.size > 0) {
+      const firstSelectedId = Array.from(selectedItems)[0];
+      section = findSection(sections, firstSelectedId);
+    }
+
+    if (section) {
+      setSectionToSync(section);
+      setShowSyncModal(true);
+      setFabExpanded(false);
+    }
+  };
+
+  // Abrir modal de mover
+  const openMoveModal = () => {
+    setShowMoveModal(true);
+    setFabExpanded(false);
   };
 
   return (
@@ -627,8 +852,28 @@ const Home = ({ user, onLogout }) => {
               <span>
                 {isDesktop
                   ? "Modo Edición Activo: Usa los botones para editar o eliminar"
-                  : "Modo Edición Activo: Desliza las secciones para editar o eliminar"}
+                  : "Modo Edición: Selecciona elementos con el checkbox"}
               </span>
+            </div>
+          )}
+
+          {/* Banner de selección múltiple */}
+          {editMode && selectedItems.size > 0 && (
+            <div className="selection-banner">
+              <div className="selection-info">
+                <IonIcon icon={checkmarkDoneOutline} />
+                <span>{selectedItems.size} elemento(s) seleccionado(s)</span>
+              </div>
+              <div className="selection-actions">
+                <IonButton fill="clear" size="small" onClick={clearSelection}>
+                  <IonIcon icon={closeOutline} slot="start" />
+                  Deseleccionar
+                </IonButton>
+                <IonButton fill="clear" size="small" onClick={selectAll}>
+                  <IonIcon icon={checkmarkDoneOutline} slot="start" />
+                  Seleccionar todo
+                </IonButton>
+              </div>
             </div>
           )}
 
@@ -672,19 +917,86 @@ const Home = ({ user, onLogout }) => {
                   onDrop={handleDrop}
                   onDragEnd={handleDragEnd}
                   isAdmin={isAdmin && editMode}
+                  editMode={editMode}
+                  isSelected={selectedItems.has(section.id)}
+                  onToggleSelect={toggleSelectItem}
+                  selectedItems={selectedItems}
                 />
               ))}
             </IonList>
           )}
         </div>
 
-        {/* Botón flotante para agregar sección (solo admin en modo edición) */}
+        {/* FAB Menu - Desktop: solo agregar, Móvil: menú completo */}
         {isAdmin && editMode && (
-          <IonFab vertical="bottom" horizontal="end" slot="fixed">
-            <IonFabButton onClick={() => handleAddSection()}>
-              <IonIcon icon={addOutline} />
-            </IonFabButton>
-          </IonFab>
+          <>
+            {/* Desktop: FAB simple para agregar */}
+            {isDesktop && (
+              <IonFab vertical="bottom" horizontal="end" slot="fixed">
+                <IonFabButton onClick={() => handleAddSection()}>
+                  <IonIcon icon={addOutline} />
+                </IonFabButton>
+              </IonFab>
+            )}
+
+            {/* Móvil: FAB expandible con acciones */}
+            {!isDesktop && (
+              <IonFab vertical="bottom" horizontal="end" slot="fixed" className="edit-fab-menu">
+                <IonFabButton
+                  onClick={() => setFabExpanded(!fabExpanded)}
+                  className={fabExpanded ? 'fab-expanded' : ''}
+                >
+                  <IonIcon icon={fabExpanded ? closeOutline : menuOutline} />
+                </IonFabButton>
+                <IonFabList side="top" activated={fabExpanded}>
+                  {/* Agregar nueva sección */}
+                  <IonFabButton
+                    onClick={() => {
+                      setFabExpanded(false);
+                      handleAddSection();
+                    }}
+                    data-action="add"
+                    title="Agregar sección"
+                  >
+                    <IonIcon icon={addOutline} />
+                  </IonFabButton>
+
+                  {/* Sincronizar/Actualizar con Drive */}
+                  <IonFabButton
+                    onClick={openSyncModal}
+                    data-action="sync"
+                    disabled={selectedItems.size === 0}
+                    className={selectedItems.size === 0 ? 'fab-disabled' : ''}
+                    title={hasSelectedWithDrive() ? "Sincronizar con Drive" : "Vincular con Drive"}
+                  >
+                    <IonIcon icon={syncOutline} />
+                  </IonFabButton>
+
+                  {/* Mover */}
+                  <IonFabButton
+                    onClick={openMoveModal}
+                    data-action="move"
+                    disabled={selectedItems.size === 0}
+                    className={selectedItems.size === 0 ? 'fab-disabled' : ''}
+                    title="Mover seleccionados"
+                  >
+                    <IonIcon icon={moveOutline} />
+                  </IonFabButton>
+
+                  {/* Eliminar */}
+                  <IonFabButton
+                    onClick={handleDeleteSelected}
+                    data-action="delete"
+                    disabled={selectedItems.size === 0}
+                    className={selectedItems.size === 0 ? 'fab-disabled' : ''}
+                    title="Eliminar seleccionados"
+                  >
+                    <IonIcon icon={trashOutline} />
+                  </IonFabButton>
+                </IonFabList>
+              </IonFab>
+            )}
+          </>
         )}
 
         {/* Modal para agregar/editar */}
@@ -713,7 +1025,11 @@ const Home = ({ user, onLogout }) => {
           isOpen={showDeleteAlert}
           onDidDismiss={() => setShowDeleteAlert(false)}
           header="Confirmar eliminación"
-          message="¿Estás seguro de que deseas eliminar esta sección y todas sus subsecciones?"
+          message={
+            deleteId === 'multiple'
+              ? `¿Eliminar ${selectedItems.size} elemento(s) seleccionado(s) y todas sus subsecciones?`
+              : "¿Estás seguro de que deseas eliminar esta sección y todas sus subsecciones?"
+          }
           buttons={[
             {
               text: 'Cancelar',
@@ -725,6 +1041,30 @@ const Home = ({ user, onLogout }) => {
               handler: confirmDelete
             }
           ]}
+        />
+
+        {/* Modal para mover secciones */}
+        <MoveSectionModal
+          isOpen={showMoveModal}
+          onClose={() => setShowMoveModal(false)}
+          section={selectedItems.size === 1 ? findSection(sections, Array.from(selectedItems)[0]) : null}
+          allSections={flattenSections(sections)}
+          onMove={handleMoveSection}
+        />
+
+        {/* Modal de sincronización */}
+        <SyncFolderModal
+          isOpen={showSyncModal}
+          onClose={() => {
+            setShowSyncModal(false);
+            setSectionToSync(null);
+          }}
+          folder={sectionToSync}
+          onSync={handleSyncFolder}
+          onImportFromDrive={(folder) => {
+            setShowSyncModal(false);
+            setShowGoogleDriveModal(true);
+          }}
         />
       </IonContent>
     </IonPage>
