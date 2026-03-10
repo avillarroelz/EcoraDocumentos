@@ -61,27 +61,32 @@ class GoogleDriveService {
    * @param {string} scope - 'all', 'folder', 'shared'
    * @param {string} folderId - ID de carpeta específica (para scope='folder')
    */
-  async listDriveContents(scope = 'all', folderId = null) {
+  async listDriveContents(scope = 'all', folderId = null, driveId = null) {
     const drive = this.getDriveClient();
     let query = '';
+    let extraParams = {};
 
     switch (scope) {
       case 'folder':
-        // Listar contenido de una carpeta específica
-        if (!folderId) {
-          throw new Error('Se requiere folderId para scope="folder"');
-        }
+        if (!folderId) throw new Error('Se requiere folderId para scope="folder"');
         query = `'${folderId}' in parents and trashed=false`;
+        // Si viene de una unidad compartida, agregar parámetros necesarios
+        if (driveId) {
+          extraParams = {
+            corpora: 'drive',
+            driveId,
+            includeItemsFromAllDrives: true,
+            supportsAllDrives: true
+          };
+        }
         break;
 
       case 'shared':
-        // Listar archivos compartidos conmigo
         query = 'sharedWithMe=true and trashed=false';
         break;
 
       case 'all':
       default:
-        // Listar todo (Mi Drive)
         query = "'root' in parents and trashed=false";
         break;
     }
@@ -91,7 +96,8 @@ class GoogleDriveService {
         q: query,
         pageSize: 1000,
         fields: 'files(id, name, mimeType, parents, createdTime, modifiedTime, size, webViewLink, iconLink)',
-        orderBy: 'folder,name'
+        orderBy: 'folder,name',
+        ...extraParams
       });
 
       return response.data.files;
@@ -102,23 +108,49 @@ class GoogleDriveService {
   }
 
   /**
+   * Lista todas las unidades compartidas a las que tiene acceso el usuario
+   */
+  async listSharedDrives() {
+    const drive = this.getDriveClient();
+    try {
+      const response = await drive.drives.list({
+        pageSize: 100,
+        fields: 'drives(id, name, createdTime)'
+      });
+      return response.data.drives || [];
+    } catch (error) {
+      console.error('Error listando unidades compartidas:', error);
+      throw error;
+    }
+  }
+
+  /**
    * Construye recursivamente la estructura jerárquica de carpetas y archivos
    * @param {string} folderId - ID de la carpeta raíz
    * @param {number} maxDepth - Profundidad máxima (por defecto ilimitada)
    */
-  async buildHierarchy(folderId = 'root', maxDepth = -1, currentDepth = 0) {
+  async buildHierarchy(folderId = 'root', maxDepth = -1, currentDepth = 0, driveId = null) {
     if (maxDepth !== -1 && currentDepth >= maxDepth) {
       return [];
     }
 
     const drive = this.getDriveClient();
 
+    // Parámetros extra para unidades compartidas
+    const sharedParams = driveId ? {
+      corpora: 'drive',
+      driveId,
+      includeItemsFromAllDrives: true,
+      supportsAllDrives: true
+    } : {};
+
     try {
       const response = await drive.files.list({
         q: `'${folderId}' in parents and trashed=false`,
         pageSize: 1000,
         fields: 'files(id, name, mimeType, parents, createdTime, modifiedTime, size, webViewLink, iconLink, description)',
-        orderBy: 'folder,name'
+        orderBy: 'folder,name',
+        ...sharedParams
       });
 
       const items = response.data.files;
@@ -143,9 +175,8 @@ class GoogleDriveService {
           children: []
         };
 
-        // Si es una carpeta, obtener sus hijos recursivamente
         if (isFolder) {
-          node.children = await this.buildHierarchy(item.id, maxDepth, currentDepth + 1);
+          node.children = await this.buildHierarchy(item.id, maxDepth, currentDepth + 1, driveId);
         }
 
         result.push(node);
