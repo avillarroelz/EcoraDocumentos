@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import { Route, Redirect } from 'react-router-dom';
+import { API_BASE } from './config/api';
 import Home from './pages/Home';
 import SectionDetail from './pages/SectionDetail';
 import Login from './pages/Login';
@@ -46,7 +47,7 @@ const App = () => {
   const handleLogout = async () => {
     try {
       // Llamar al endpoint de logout en el backend
-      await fetch('http://localhost:3001/api/google/logout', {
+      await fetch(`${API_BASE}/google/logout`, {
         method: 'POST',
         credentials: 'include'
       });
