@@ -10,7 +10,8 @@ import {
   IonList,
   IonItemSliding,
   IonItemOptions,
-  IonItemOption
+  IonItemOption,
+  IonCheckbox
 } from '@ionic/react';
 import {
   chevronDownOutline,
@@ -18,7 +19,10 @@ import {
   addCircleOutline,
   createOutline,
   trashOutline,
-  enterOutline
+  enterOutline,
+  folderOutline,
+  folderOpenOutline,
+  documentTextOutline
 } from 'ionicons/icons';
 import './SectionItem.css';
 
@@ -33,22 +37,30 @@ const SectionItem = ({
   onDragOver,
   onDrop,
   onDragEnd,
-  isAdmin = false
+  isAdmin = false,
+  editMode = false,
+  isSelected = false,
+  onToggleSelect,
+  selectedItems = new Set()
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+  // Detectar plataforma nativa (Android/iOS) o usar ancho de ventana
+  const isNative = Capacitor.isNativePlatform();
+  const [isDesktop, setIsDesktop] = useState(!isNative && window.innerWidth >= 768);
   const hasChildren = section.children && section.children.length > 0;
   const history = useHistory();
 
-  // Detectar cambios en el tamaño de la ventana
+  // Detectar cambios en el tamaño de la ventana (solo si no es nativo)
   useEffect(() => {
+    if (isNative) return; // En móvil nativo, siempre es "móvil"
+
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  }, [isNative]);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -155,11 +167,25 @@ const SectionItem = ({
     >
       <IonItemSliding>
         <IonItem
-          className={`section-item level-${level} ${hasChildren ? 'is-folder' : 'is-file'}`}
+          className={`section-item level-${level} ${hasChildren ? 'is-folder' : 'is-file'} ${isSelected ? 'is-selected' : ''}`}
           style={indentStyle}
           button={true}
           onClick={handleItemClick}
         >
+          {/* Checkbox de selección - solo en modo edición móvil */}
+          {editMode && !isDesktop && onToggleSelect && (
+            <IonCheckbox
+              slot="start"
+              checked={isSelected}
+              onIonChange={(e) => {
+                e.stopPropagation();
+                onToggleSelect(section.id);
+              }}
+              onClick={(e) => e.stopPropagation()}
+              className="selection-checkbox"
+            />
+          )}
+
           {/* Icono de expansión */}
           {hasChildren && (
             <IonIcon
@@ -169,7 +195,16 @@ const SectionItem = ({
             />
           )}
 
-          
+          {/* Icono de tipo: carpeta o archivo */}
+          <IonIcon
+            slot="start"
+            icon={hasChildren
+              ? (isExpanded ? folderOpenOutline : folderOutline)
+              : documentTextOutline
+            }
+            className={`type-icon ${hasChildren ? 'type-icon--folder' : 'type-icon--file'}`}
+          />
+
           {/* Título de la sección */}
           <IonLabel>
             <h3 className="section-title">
@@ -264,6 +299,10 @@ const SectionItem = ({
               onDrop={onDrop}
               onDragEnd={onDragEnd}
               isAdmin={isAdmin}
+              editMode={editMode}
+              isSelected={selectedItems.has(child.id)}
+              onToggleSelect={onToggleSelect}
+              selectedItems={selectedItems}
             />
           ))}
         </IonList>

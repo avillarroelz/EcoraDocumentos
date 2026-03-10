@@ -385,7 +385,7 @@ app.post('/api/google/import', async (req, res) => {
       });
     }
 
-    const { scope, folderId, maxDepth } = req.body;
+    const { scope, folderId, maxDepth, driveId } = req.body;
 
     // Establecer credenciales
     googleDrive.setCredentials(req.session.googleTokens);
@@ -393,12 +393,14 @@ app.post('/api/google/import', async (req, res) => {
     let driveStructure;
 
     if (scope === 'folder' && folderId) {
-      // Importar carpeta específica
-      driveStructure = await googleDrive.buildHierarchy(folderId, maxDepth || -1);
+      // Importar carpeta específica (Mi Drive o unidad compartida)
+      driveStructure = await googleDrive.buildHierarchy(folderId, maxDepth || -1, 0, driveId || null);
+    } else if (scope === 'shared-drive' && driveId) {
+      // Importar toda una unidad compartida (raíz = el propio driveId)
+      driveStructure = await googleDrive.buildHierarchy(driveId, maxDepth || -1, 0, driveId);
     } else {
-      // Importar desde raíz o compartidos
-      const rootId = scope === 'shared' ? null : 'root';
-      driveStructure = await googleDrive.buildHierarchy(rootId || 'root', maxDepth || -1);
+      // Importar desde raíz de Mi Drive
+      driveStructure = await googleDrive.buildHierarchy('root', maxDepth || -1);
     }
 
     // Convertir a formato de Ecora
@@ -435,10 +437,10 @@ app.post('/api/google/list', async (req, res) => {
       });
     }
 
-    const { scope, folderId } = req.body;
+    const { scope, folderId, driveId } = req.body;
 
     googleDrive.setCredentials(req.session.googleTokens);
-    const items = await googleDrive.listDriveContents(scope || 'all', folderId);
+    const items = await googleDrive.listDriveContents(scope || 'all', folderId, driveId || null);
 
     res.json({
       success: true,
@@ -454,6 +456,20 @@ app.post('/api/google/list', async (req, res) => {
       error: 'Error al listar archivos de Drive',
       message: error.message
     });
+  }
+});
+
+// Listar unidades compartidas
+app.get('/api/google/shared-drives', async (req, res) => {
+  try {
+    if (!req.session.googleTokens) {
+      return res.status(401).json({ success: false, error: 'No autenticado con Google Drive' });
+    }
+    googleDrive.setCredentials(req.session.googleTokens);
+    const drives = await googleDrive.listSharedDrives();
+    res.json({ success: true, data: drives });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Error al listar unidades compartidas', message: error.message });
   }
 });
 

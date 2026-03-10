@@ -110,6 +110,34 @@
   transition: transform 0.3s ease;
 }
 
+/* Icono de tipo (carpeta / archivo) */
+.type-icon {
+  font-size: 1.35rem;
+  margin-right: 6px;
+  flex-shrink: 0;
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.type-icon--folder {
+  color: var(--ecora-coral);
+  filter: drop-shadow(0 1px 3px rgba(255, 153, 118, 0.35));
+}
+
+.section-item:hover .type-icon--folder {
+  filter: drop-shadow(0 2px 6px rgba(255, 153, 118, 0.6));
+  transform: scale(1.1);
+}
+
+.type-icon--file {
+  color: var(--ecora-blue-secondary);
+  filter: drop-shadow(0 1px 3px rgba(6, 118, 232, 0.25));
+}
+
+.section-item:hover .type-icon--file {
+  filter: drop-shadow(0 2px 6px rgba(6, 118, 232, 0.5));
+  transform: scale(1.08);
+}
+
 /* Botón de ver detalle */
 .view-detail-button {
   --color: var(--ecora-blue-primary);
@@ -243,6 +271,46 @@ ion-item-option {
   font-family: var(--ecora-font-primary);
   font-weight: 600;
   font-size: 0.875rem;
+}
+
+/* === CHECKBOX DE SELECCIÓN === */
+.selection-checkbox {
+  --size: 22px;
+  --checkbox-background: white;
+  --checkbox-background-checked: var(--ecora-blue-primary);
+  --border-color: var(--ecora-blue-secondary);
+  --border-color-checked: var(--ecora-blue-primary);
+  --checkmark-color: white;
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.selection-checkbox::part(container) {
+  border-radius: 6px;
+  border-width: 2px;
+}
+
+/* Estado seleccionado del item */
+.section-item.is-selected {
+  --background: rgba(6, 118, 232, 0.08);
+  border-left-color: var(--ecora-blue-primary) !important;
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.2);
+}
+
+.section-item.is-selected::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--ecora-blue-primary);
+  border-radius: 0 8px 8px 0;
+}
+
+/* Animación de selección */
+.section-item.is-selected .section-title {
+  color: var(--ecora-blue-primary);
 }
 
 /* Responsive */

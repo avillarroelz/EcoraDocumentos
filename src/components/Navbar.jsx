@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
   IonHeader,
   IonToolbar,
-  IonTitle,
   IonButton,
   IonIcon
 } from '@ionic/react';
@@ -20,107 +19,106 @@ const Navbar = ({ user, onLogout }) => {
   const location = useLocation();
   const [imageError, setImageError] = useState(false);
 
-  // Verificar si el usuario es super_admin (solo super_admin puede gestionar)
   const isSuperAdmin = user?.roles?.includes('super_admin');
-  const canManageUsers = isSuperAdmin;
-  const canManageOrganization = isSuperAdmin;
 
-  // Resetear error de imagen cuando cambia el usuario o su foto
   useEffect(() => {
     setImageError(false);
   }, [user?.picture, user?.fotoPerfil, user?.email]);
 
-  // Handler para errores de carga de imagen
-  const handleImageError = (e) => {
-    console.warn('Error cargando imagen de perfil:', user?.picture || user?.fotoPerfil);
-    setImageError(true);
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
-    <IonHeader>
-      <IonToolbar color="primary">
-        <div slot="start" style={{ display: 'flex', alignItems: 'center', paddingLeft: '16px' }}>
+    <IonHeader className="ecora-header">
+      <IonToolbar className="ecora-toolbar">
+
+        {/* Logo */}
+        <div slot="start" className="navbar-logo-wrap">
           <img
             src="/assets/ecora-logo-white.png"
             alt="Ecora Logo"
-            style={{ height: '40px', objectFit: 'contain' }}
+            className="navbar-logo"
+            onClick={() => history.push('/home')}
           />
         </div>
 
-        {/* Botón de Home */}
-        {location.pathname !== '/home' && (
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="light"
-            onClick={() => history.push('/home')}
-            title="Ir al inicio"
-            style={{ marginRight: '8px' }}
-          >
-            <IonIcon icon={homeOutline} slot="icon-only" />
-          </IonButton>
-        )}
+        {/* Acciones agrupadas */}
+        <div slot="end" className="navbar-actions">
 
-        {/* Botones de Administración */}
-        {canManageUsers && (
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="light"
-            onClick={() => history.push('/admin/users')}
-            title="Gestión de Usuarios"
-            style={{ marginRight: '8px' }}
-          >
-            <IonIcon icon={peopleOutline} slot="icon-only" />
-          </IonButton>
-        )}
-        {canManageOrganization && (
-          <IonButton
-            slot="end"
-            fill="clear"
-            color="light"
-            onClick={() => history.push('/admin/organization')}
-            title="Gestión de Organización"
-            style={{ marginRight: '8px' }}
-          >
-            <IonIcon icon={businessOutline} slot="icon-only" />
-          </IonButton>
-        )}
+          {location.pathname !== '/home' && (
+            <IonButton
+              fill="clear"
+              color="light"
+              onClick={() => history.push('/home')}
+              className={`nav-btn${isActive('/home') ? ' nav-btn--active' : ''}`}
+              title="Inicio"
+            >
+              <IonIcon icon={homeOutline} slot="icon-only" />
+            </IonButton>
+          )}
 
-        {/* Avatar y nombre del usuario */}
-        {user && (
-          <div slot="end" className="user-info" style={{ display: 'flex', alignItems: 'center', marginRight: '10px' }}>
-            {(user.picture || user.fotoPerfil) && !imageError ? (
-              <img
-                key={`avatar-${user.email}-${user.picture || user.fotoPerfil}`}
-                src={user.picture || user.fotoPerfil}
-                alt={user.name || user.nombre}
-                className="user-avatar-image"
-                onError={handleImageError}
-                crossOrigin="anonymous"
-              />
-            ) : (
-              <div className="user-avatar-initial">
-                {(user.name || user.nombre || 'U').charAt(0).toUpperCase()}
+          {isSuperAdmin && (
+            <IonButton
+              fill="clear"
+              color="light"
+              onClick={() => history.push('/admin/users')}
+              className={`nav-btn${isActive('/admin/users') ? ' nav-btn--active' : ''}`}
+              title="Gestión de Usuarios"
+            >
+              <IonIcon icon={peopleOutline} slot="icon-only" />
+            </IonButton>
+          )}
+
+          {isSuperAdmin && (
+            <IonButton
+              fill="clear"
+              color="light"
+              onClick={() => history.push('/admin/organization')}
+              className={`nav-btn${isActive('/admin/organization') ? ' nav-btn--active' : ''}`}
+              title="Gestión de Organización"
+            >
+              <IonIcon icon={businessOutline} slot="icon-only" />
+            </IonButton>
+          )}
+
+          {isSuperAdmin && <div className="navbar-divider" />}
+
+          {/* Avatar y nombre */}
+          {user && (
+            <div className="user-info">
+              <div className="user-avatar-ring">
+                {(user.picture || user.fotoPerfil) && !imageError ? (
+                  <img
+                    key={`avatar-${user.email}-${user.picture || user.fotoPerfil}`}
+                    src={user.picture || user.fotoPerfil}
+                    alt={user.name || user.nombre}
+                    className="user-avatar-image"
+                    onError={() => setImageError(true)}
+                    crossOrigin="anonymous"
+                  />
+                ) : (
+                  <div className="user-avatar-initial">
+                    {(user.name || user.nombre || 'U').charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
-            )}
-            <span className="user-name">
-              {user.name || user.nombre}
-            </span>
-          </div>
-        )}
+              <span className="user-name">{user.name || user.nombre}</span>
+            </div>
+          )}
 
-        {/* Botón de Logout */}
-        <IonButton
-          slot="end"
-          fill="clear"
-          color="light"
-          onClick={onLogout}
-          title="Cerrar sesión"
-          style={{ marginRight: '16px' }}
-        >
-          <IonIcon icon={logOutOutline} slot="icon-only" />
-        </IonButton>
+          <div className="navbar-divider" />
+
+          {/* Logout */}
+          <IonButton
+            fill="clear"
+            color="light"
+            onClick={onLogout}
+            className="nav-btn nav-btn--logout"
+            title="Cerrar sesión"
+          >
+            <IonIcon icon={logOutOutline} slot="icon-only" />
+          </IonButton>
+
+        </div>
       </IonToolbar>
     </IonHeader>
   );
