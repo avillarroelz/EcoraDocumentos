@@ -9,7 +9,7 @@ const PRODUCTION_API_URL = 'http://ecora-prod-v3.eba-tdqgyq2z.us-east-1.elasticb
 const LOCAL_API_URL = 'http://10.0.2.2:3001/api';
 
 // Cambiar a true para usar el backend local en pruebas
-const USE_LOCAL_BACKEND = true;
+const USE_LOCAL_BACKEND = false;
 
 const getApiBase = () => {
   const isNative = Capacitor.isNativePlatform();
