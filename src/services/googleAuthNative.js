@@ -50,15 +50,8 @@ export const signInWithGoogle = async () => {
       throw new Error(`Error de Google Sign-In: ${signInError.message || signInError.code || 'desconocido'}`);
     }
 
-    console.log('[GoogleAuthNative] googleUser completo:', JSON.stringify(googleUser, null, 2));
-    console.log('[GoogleAuthNative] Usuario autenticado:', googleUser.email);
-    console.log('[GoogleAuthNative] ID Token presente:', !!googleUser.authentication?.idToken);
-    console.log('[GoogleAuthNative] Access Token presente:', !!googleUser.authentication?.accessToken);
-    console.log('[GoogleAuthNative] serverAuthCode:', googleUser.serverAuthCode);
-
     // Enviar tokens al backend para validación y creación de sesión
     const backendUrl = `${API_BASE}/google/auth/native`;
-    console.log('[GoogleAuthNative] Enviando a backend:', backendUrl);
 
     let response;
     let data;
@@ -85,11 +78,8 @@ export const signInWithGoogle = async () => {
         })
       });
 
-      console.log('[GoogleAuthNative] Response status:', response.status);
-
       // Intentar parsear la respuesta
       const responseText = await response.text();
-      console.log('[GoogleAuthNative] Response body:', responseText.substring(0, 500));
 
       try {
         data = JSON.parse(responseText);

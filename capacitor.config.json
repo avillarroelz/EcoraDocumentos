@@ -4,7 +4,7 @@
   "webDir": "dist",
   "server": {
     "androidScheme": "https",
-    "cleartext": true,
+    "cleartext": false,
     "allowNavigation": [
       "ecora-prod-v3.eba-tdqgyq2z.us-east-1.elasticbeanstalk.com"
     ]

@@ -3,32 +3,62 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const session = require('express-session');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
 const GoogleDriveService = require('./googleDriveConfig');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const isProduction = process.env.NODE_ENV === 'production';
 
-// Middleware - CORS con soporte para Netlify y múltiples orígenes
+// Trust proxy (necesario detrás de AWS ALB/ELB)
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
+// Helmet: headers de seguridad
+app.use(helmet({
+  contentSecurityPolicy: false, // Deshabilitado porque el callback OAuth retorna HTML inline
+  crossOriginEmbedderPolicy: false
+}));
+
+// Rate limiting general: 100 requests por 15 minutos por IP
+const generalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { success: false, error: 'Demasiadas solicitudes, intente de nuevo más tarde' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/', generalLimiter);
+
+// Rate limiting estricto para endpoints de autenticación: 10 por 15 minutos
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { success: false, error: 'Demasiados intentos de autenticación, intente más tarde' },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+app.use('/api/google/auth', authLimiter);
+app.use('/api/google/callback', authLimiter);
+
+// CORS con orígenes controlados
 const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100', 'http://localhost', 'https://localhost'];
 
 app.use(cors({
   origin: function (origin, callback) {
-    // Permitir requests sin origin (como mobile apps o curl)
+    // Permitir requests sin origin (mobile apps nativas vía Capacitor)
     if (!origin) return callback(null, true);
 
-    // Verificar si el origin está en la lista
+    // Verificar si el origin está en la lista explícita
     if (corsOrigins.indexOf(origin) !== -1) {
       return callback(null, true);
     }
 
-    // Permitir cualquier subdominio de netlify.app
-    if (origin.endsWith('.netlify.app')) {
-      return callback(null, true);
-    }
-
-    // Permitir cualquier subdominio de vercel.app
+    // Permitir subdominios específicos de Vercel para el frontend desplegado
     if (origin.endsWith('.vercel.app')) {
       return callback(null, true);
     }
@@ -37,17 +67,24 @@ app.use(cors({
   },
   credentials: true
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan('dev'));
+app.use(morgan(isProduction ? 'combined' : 'dev'));
 
-// Session middleware para almacenar tokens temporalmente
+// Validar que SESSION_SECRET esté configurado en producción
+if (isProduction && !process.env.SESSION_SECRET) {
+  console.error('FATAL: SESSION_SECRET es requerido en producción');
+  process.exit(1);
+}
+
+// Session middleware
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'ecora-secret-key-change-in-production',
+  secret: process.env.SESSION_SECRET || 'dev-only-secret-not-for-production',
   resave: false,
   saveUninitialized: false,
+  proxy: isProduction,
   cookie: {
-    secure: false, // EB corre en HTTP detrás del LB, secure:true bloquea cookies
+    secure: isProduction, // true en producción (HTTPS vía ALB)
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
@@ -192,7 +229,7 @@ app.get('/api/google/auth', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al generar URL de autenticación',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -253,7 +290,7 @@ app.post('/api/google/auth/native', async (req, res) => {
     console.error('[Native Auth] Error:', error);
     res.status(500).json({
       success: false,
-      message: error.message || 'Error en autenticación nativa'
+      message: isProduction ? 'Error interno' : error.message || 'Error en autenticación nativa'
     });
   }
 });
@@ -360,9 +397,10 @@ app.get('/api/google/callback', async (req, res) => {
           <p>Esta ventana se cerrará automáticamente...</p>
         </div>
         <script>
-          // Notificar a la ventana padre si existe
+          // Notificar a la ventana padre si existe (con origin específico)
           if (window.opener) {
-            window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, '*');
+            var allowedOrigin = '${process.env.FRONTEND_URL || 'http://localhost:3000'}';
+            window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS' }, allowedOrigin);
           }
           // Cerrar ventana después de 1.5 segundos
           setTimeout(() => {
@@ -410,9 +448,10 @@ app.get('/api/google/callback', async (req, res) => {
           <p>Esta ventana se cerrará automáticamente...</p>
         </div>
         <script>
-          // Notificar a la ventana padre si existe
+          // Notificar a la ventana padre si existe (con origin específico)
           if (window.opener) {
-            window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR' }, '*');
+            var allowedOrigin = '${process.env.FRONTEND_URL || 'http://localhost:3000'}';
+            window.opener.postMessage({ type: 'GOOGLE_AUTH_ERROR' }, allowedOrigin);
           }
           // Cerrar ventana después de 2 segundos
           setTimeout(() => {
@@ -485,7 +524,7 @@ app.post('/api/google/import', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al importar desde Google Drive',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -517,7 +556,7 @@ app.post('/api/google/list', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al listar archivos de Drive',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -571,7 +610,7 @@ app.get('/api/sections', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al obtener las secciones',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -594,7 +633,7 @@ app.get('/api/sections/:id', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al obtener la sección',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -644,7 +683,7 @@ app.post('/api/sections', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al crear la sección',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -687,7 +726,7 @@ app.put('/api/sections/:id', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al actualizar la sección',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -716,7 +755,7 @@ app.delete('/api/sections/:id', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al eliminar la sección',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -763,7 +802,7 @@ app.post('/api/sections/search', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al buscar secciones',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -808,7 +847,7 @@ app.post('/api/sections/reset', (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Error al restablecer los datos',
-      message: error.message
+      message: isProduction ? 'Error interno' : error.message
     });
   }
 });
@@ -828,7 +867,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({
     success: false,
     error: 'Error interno del servidor',
-    message: err.message
+    message: isProduction ? 'Ocurrió un error inesperado' : err.message
   });
 });
 
