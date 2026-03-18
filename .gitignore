@@ -9,7 +9,20 @@ build/
 
 # Environment variables
 .env
+.env.*
 .env.local
+.env.production
+
+# Keystores
+*.jks
+*.keystore
+
+# Google Services
+google-services.json
+
+# Database dumps
+*.sql
+*.dump
 
 # IDE
 .vscode/
