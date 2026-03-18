@@ -1,5 +1,5 @@
 .modal-content {
-  --background: linear-gradient(180deg, #f0f7ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, #f4f8ff 0%, #ffffff 100%);
 }
 
 .modal-inner {
@@ -13,52 +13,54 @@
   background: white;
   padding: 1.25rem;
   margin-bottom: 1.5rem;
-  border-radius: 12px;
-  border-left: 5px solid var(--ecora-blue-secondary);
-  box-shadow: 0 2px 12px rgba(0, 40, 115, 0.08);
+  border-radius: 14px;
+  border-left: 4px solid var(--ecora-blue-secondary);
+  box-shadow: 0 2px 10px rgba(0, 40, 115, 0.06), 0 1px 2px rgba(0,0,0,0.02);
   transition: all 0.3s ease;
 }
 
 .parent-info:hover {
-  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.12);
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.1);
 }
 
 .parent-label {
   font-family: var(--ecora-font-primary);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(0, 40, 115, 0.6);
-  margin: 0 0 0.25rem 0;
+  letter-spacing: 0.06em;
+  color: rgba(0, 40, 115, 0.5);
+  margin: 0 0 0.3rem 0;
+  font-weight: 600;
 }
 
 .parent-title {
   font-family: var(--ecora-font-primary);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--ecora-blue-primary);
   margin: 0;
+  font-weight: 600;
 }
 
 /* Formulario */
 .form-list {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 0;
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(144, 224, 255, 0.3);
-  box-shadow: 0 2px 12px rgba(0, 40, 115, 0.08);
+  border: 1px solid rgba(0, 40, 115, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 40, 115, 0.05), 0 1px 2px rgba(0,0,0,0.02);
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .form-list:hover {
-  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.12);
-  border-color: rgba(6, 118, 232, 0.4);
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.08);
+  border-color: rgba(6, 118, 232, 0.12);
 }
 
 .form-item {
   --background: white;
-  --border-color: rgba(144, 224, 255, 0.2);
+  --border-color: rgba(0, 40, 115, 0.06);
   --padding-start: 1rem;
   --padding-end: 1rem;
   --padding-top: 1rem;
@@ -67,13 +69,13 @@
 }
 
 .form-item:hover {
-  --background: rgba(144, 224, 255, 0.03);
+  --background: rgba(0, 40, 115, 0.01);
 }
 
 .form-label {
   font-family: var(--ecora-font-primary);
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
   color: var(--ecora-blue-primary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -87,7 +89,7 @@
 .form-input,
 .form-textarea {
   font-family: var(--ecora-font-secondary);
-  font-size: 1rem;
+  font-size: 0.95rem;
   --background: white;
   --padding-start: 0;
   --padding-top: 0.5rem;
@@ -96,7 +98,7 @@
 
 .form-input {
   --border-width: 0 0 2px 0;
-  --border-color: var(--ecora-blue-light);
+  --border-color: rgba(0, 40, 115, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -105,9 +107,9 @@
 }
 
 .form-textarea {
-  --border-width: 2px;
-  --border-color: rgba(144, 224, 255, 0.5);
-  border-radius: 8px;
+  --border-width: 1.5px;
+  --border-color: rgba(0, 40, 115, 0.1);
+  border-radius: 10px;
   padding: 0.75rem;
   margin-top: 0.5rem;
   transition: all 0.3s ease;
@@ -115,7 +117,7 @@
 
 .form-textarea:focus {
   --border-color: var(--ecora-blue-secondary);
-  box-shadow: 0 0 0 3px rgba(6, 118, 232, 0.1);
+  box-shadow: 0 0 0 3px rgba(6, 118, 232, 0.08);
 }
 
 /* Botones de acción */
@@ -131,18 +133,19 @@
   --color: #ffffff;
   font-family: var(--ecora-font-primary);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  height: 48px;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.95rem;
+  height: 50px;
   margin: 0;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 40, 115, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 5px 16px rgba(0, 40, 115, 0.2);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .save-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(6, 118, 232, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 7px 22px rgba(6, 118, 232, 0.28);
 }
 
 .save-button:active {
@@ -150,28 +153,30 @@
 }
 
 .save-button:disabled {
-  --background: rgba(0, 40, 115, 0.3);
+  --background: rgba(0, 40, 115, 0.25);
   --color: rgba(255, 255, 255, 0.6);
   transform: none;
   box-shadow: none;
 }
 
 .cancel-button {
-  --border-color: var(--ecora-blue-primary);
+  --border-color: rgba(0, 40, 115, 0.15);
   --color: var(--ecora-blue-primary);
+  --background: transparent;
   font-family: var(--ecora-font-primary);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
   height: 48px;
   margin: 0;
-  border-radius: 10px;
+  border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cancel-button:hover {
-  --background: rgba(6, 118, 232, 0.08);
-  transform: translateY(-2px);
+  --background: rgba(0, 40, 115, 0.04);
+  --border-color: rgba(0, 40, 115, 0.25);
 }
 
 /* Responsive */
@@ -185,11 +190,11 @@
   }
 
   .parent-title {
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
   .form-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
 
   .form-input,
@@ -199,7 +204,7 @@
 
   .save-button,
   .cancel-button {
-    height: 44px;
-    font-size: 0.875rem;
+    height: 46px;
+    font-size: 0.88rem;
   }
 }

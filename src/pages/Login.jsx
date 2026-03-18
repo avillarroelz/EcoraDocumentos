@@ -142,8 +142,8 @@ const Login = ({ onLoginSuccess }) => {
         <div className="login-container">
           {/* Logo de Ecora */}
           <div className="login-logo">
-            <h1 className="ecora-title">ecora</h1>
-            <div className="ecora-subtitle">Sistema de Gestión de Información (SGI)</div>
+            <h1 className="ecora-title">ecora clic</h1>
+            <div className="ecora-subtitle">Todo en un clic</div>
           </div>
 
           {/* Descripción */}

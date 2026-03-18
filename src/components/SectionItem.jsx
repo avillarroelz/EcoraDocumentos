@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Browser } from '@capacitor/browser';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
+
+const OpenExternal = registerPlugin('OpenExternal');
 import {
   IonItem,
   IonLabel,
@@ -41,9 +43,18 @@ const SectionItem = ({
   editMode = false,
   isSelected = false,
   onToggleSelect,
-  selectedItems = new Set()
+  selectedItems = new Set(),
+  expandedIds,
+  onToggleExpand
 }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  // Si expandedIds viene de Home, usar controlado; sino usar estado local (compatibilidad)
+  const [localExpanded, setLocalExpanded] = useState(true);
+  const isExpanded = expandedIds ? expandedIds.has(section.id) : localExpanded;
+  const toggleExpand = () => {
+    if (onToggleExpand) onToggleExpand(section.id);
+    else setLocalExpanded(!localExpanded);
+  };
+
   // Detectar plataforma nativa (Android/iOS) o usar ancho de ventana
   const isNative = Capacitor.isNativePlatform();
   const [isDesktop, setIsDesktop] = useState(!isNative && window.innerWidth >= 768);
@@ -52,7 +63,7 @@ const SectionItem = ({
 
   // Detectar cambios en el tamaño de la ventana (solo si no es nativo)
   useEffect(() => {
-    if (isNative) return; // En móvil nativo, siempre es "móvil"
+    if (isNative) return;
 
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 768);
@@ -62,19 +73,36 @@ const SectionItem = ({
     return () => window.removeEventListener('resize', handleResize);
   }, [isNative]);
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  // Función para abrir URLs (usa app nativa en Android/iOS)
+  // Función para abrir URLs — en Android usa Intent nativo para abrir app de Drive
   const openUrl = async (url) => {
     if (Capacitor.isNativePlatform()) {
-      // En Android/iOS, usar Browser plugin que abre la app nativa de Drive
-      await Browser.open({ url, windowName: '_system' });
+      try {
+        // Transformar a formato que Drive app reconoce
+        const driveId = extractDriveId(url);
+        const targetUrl = driveId
+          ? `https://drive.google.com/open?id=${driveId}`
+          : url;
+        // Plugin nativo: abre con ACTION_VIEW → Android elige app de Drive
+        await OpenExternal.open({ url: targetUrl });
+      } catch (err) {
+        console.error('[openUrl] Fallback to Browser:', err);
+        await Browser.open({ url });
+      }
     } else {
-      // En web, abrir en nueva pestaña
       window.open(url, '_blank');
     }
+  };
+
+  // Extraer ID de archivo/carpeta de una URL de Google Drive
+  const extractDriveId = (driveUrl) => {
+    if (!driveUrl) return null;
+    const folderMatch = driveUrl.match(/\/folders\/([a-zA-Z0-9_-]+)/);
+    if (folderMatch) return folderMatch[1];
+    const fileMatch = driveUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (fileMatch) return fileMatch[1];
+    const idMatch = driveUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (idMatch) return idMatch[1];
+    return null;
   };
 
   const handleViewDetail = (e) => {
@@ -303,6 +331,8 @@ const SectionItem = ({
               isSelected={selectedItems.has(child.id)}
               onToggleSelect={onToggleSelect}
               selectedItems={selectedItems}
+              expandedIds={expandedIds}
+              onToggleExpand={onToggleExpand}
             />
           ))}
         </IonList>

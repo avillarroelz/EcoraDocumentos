@@ -25,6 +25,8 @@ import {
   peopleOutline,
   hardwareChipOutline
 } from 'ionicons/icons';
+import { Capacitor } from '@capacitor/core';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { API_BASE } from '../config/api';
 import './GoogleDriveModal.css';
 
@@ -75,6 +77,57 @@ const GoogleDriveModal = ({ isOpen, onClose, onImport }) => {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     setError('');
+
+    if (Capacitor.isNativePlatform()) {
+      // En Android/iOS: usar tokens nativos ya obtenidos o re-autenticar
+      try {
+        let googleUser;
+        try {
+          // Intentar refresh silencioso primero
+          googleUser = await GoogleAuth.refresh();
+        } catch {
+          // Si falla, hacer sign-in completo
+          googleUser = await GoogleAuth.signIn();
+        }
+
+        const accessToken = googleUser.accessToken || googleUser.authentication?.accessToken;
+        const serverAuthCode = googleUser.serverAuthCode;
+
+        // Enviar tokens al backend para crear sesión de Drive
+        const res = await fetch(`${API_BASE}/google/auth/native`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            accessToken,
+            serverAuthCode,
+            user: {
+              id: googleUser.id,
+              email: googleUser.email,
+              name: googleUser.name || googleUser.givenName,
+              givenName: googleUser.givenName,
+              familyName: googleUser.familyName,
+              imageUrl: googleUser.imageUrl
+            }
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          await checkAuthStatus();
+        } else {
+          setError(data.message || 'Error al conectar con Google Drive');
+        }
+      } catch (err) {
+        console.error('[GoogleDriveModal] Error nativo:', err);
+        setError('Error al conectar con Google Drive');
+      } finally {
+        setIsLoading(false);
+      }
+      return;
+    }
+
+    // En web: flujo con popup
     try {
       const res = await fetch(`${API_BASE}/google/auth`);
       const data = await res.json();

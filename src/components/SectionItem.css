@@ -7,36 +7,36 @@
   --background: white;
   --border-color: var(--ecora-blue-light);
   --color: var(--ecora-blue-primary);
-  --padding-start: 8px;
-  --padding-end: 8px;
-  --padding-top: 12px;
-  --padding-bottom: 12px;
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 13px;
+  --padding-bottom: 13px;
   --inner-padding-end: 8px;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 12px 0;
-  border-radius: 14px;
-  box-shadow: 0 2px 8px rgba(0, 40, 115, 0.08);
+  margin: 10px 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 40, 115, 0.06), 0 1px 2px rgba(0,0,0,0.03);
   overflow: hidden;
 }
 
 .section-item:hover {
-  --background: rgba(144, 224, 255, 0.05);
-  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.15);
-  transform: translateY(-2px);
+  --background: rgba(144, 224, 255, 0.04);
+  box-shadow: 0 4px 18px rgba(6, 118, 232, 0.12);
+  transform: translateY(-1px);
 }
 
-/* Carpetas (con hijos) - Borde salmón/coral */
+/* Carpetas (con hijos) - Borde coral */
 .section-item.is-folder {
-  --border-width: 0 0 0 5px;
+  --border-width: 0 0 0 4px;
   --border-style: solid;
   --border-color: var(--ecora-coral);
   font-weight: 600;
-  box-shadow: 0 3px 12px rgba(255, 153, 118, 0.15);
+  box-shadow: 0 2px 10px rgba(255, 153, 118, 0.1), 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .section-item.is-folder:hover {
-  box-shadow: 0 6px 20px rgba(255, 153, 118, 0.25);
+  box-shadow: 0 5px 20px rgba(255, 153, 118, 0.18);
 }
 
 /* Archivos (sin hijos) - Borde azul */
@@ -44,14 +44,14 @@
   --border-width: 0 0 0 4px;
   --border-style: solid;
   --border-color: var(--ecora-blue-secondary);
-  box-shadow: 0 2px 8px rgba(6, 118, 232, 0.1);
+  box-shadow: 0 2px 8px rgba(6, 118, 232, 0.07), 0 1px 2px rgba(0,0,0,0.03);
 }
 
 .section-item.is-file:hover {
-  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.2);
+  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.15);
 }
 
-/* Niveles de profundidad - ajustes sutiles */
+/* Niveles de profundidad */
 .section-item.level-0 {
   font-weight: 600;
 }
@@ -61,7 +61,7 @@
 .section-item.level-3,
 .section-item.level-4,
 .section-item.level-5 {
-  --border-width: 0 0 0 4px;
+  --border-width: 0 0 0 3px;
 }
 
 /* Línea de jerarquía vertical */
@@ -85,34 +85,34 @@
 .section-title {
   font-family: var(--ecora-font-primary);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--ecora-blue-primary);
   margin: 0;
-  padding-top: 4px;
+  padding-top: 3px;
   line-height: 1.4;
 }
 
 .section-description {
   font-family: var(--ecora-font-secondary);
-  font-size: 0.85rem;
-  color: rgba(0, 40, 115, 0.65);
+  font-size: 0.82rem;
+  color: rgba(0, 40, 115, 0.55);
   margin: 0;
-  padding-top: 6px;
-  padding-bottom: 4px;
+  padding-top: 5px;
+  padding-bottom: 3px;
   line-height: 1.5;
 }
 
 /* Icono de expansión */
 .expand-icon {
   color: var(--ecora-blue-secondary);
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   margin-right: 0.5rem;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Icono de tipo (carpeta / archivo) */
 .type-icon {
-  font-size: 1.35rem;
+  font-size: 1.3rem;
   margin-right: 6px;
   flex-shrink: 0;
   transition: transform 0.25s ease, filter 0.25s ease;
@@ -120,49 +120,49 @@
 
 .type-icon--folder {
   color: var(--ecora-coral);
-  filter: drop-shadow(0 1px 3px rgba(255, 153, 118, 0.35));
+  filter: drop-shadow(0 1px 3px rgba(255, 153, 118, 0.3));
 }
 
 .section-item:hover .type-icon--folder {
-  filter: drop-shadow(0 2px 6px rgba(255, 153, 118, 0.6));
-  transform: scale(1.1);
+  filter: drop-shadow(0 2px 6px rgba(255, 153, 118, 0.5));
+  transform: scale(1.08);
 }
 
 .type-icon--file {
   color: var(--ecora-blue-secondary);
-  filter: drop-shadow(0 1px 3px rgba(6, 118, 232, 0.25));
+  filter: drop-shadow(0 1px 3px rgba(6, 118, 232, 0.2));
 }
 
 .section-item:hover .type-icon--file {
-  filter: drop-shadow(0 2px 6px rgba(6, 118, 232, 0.5));
-  transform: scale(1.08);
+  filter: drop-shadow(0 2px 6px rgba(6, 118, 232, 0.4));
+  transform: scale(1.06);
 }
 
 /* Botón de ver detalle */
 .view-detail-button {
-  --color: var(--ecora-blue-primary);
-  --padding-start: 0.75rem;
-  --padding-end: 0.75rem;
-  margin: 0 0.5rem;
-  transition: all 0.3s ease;
+  --color: var(--ecora-blue-secondary);
+  --padding-start: 0.6rem;
+  --padding-end: 0.6rem;
+  margin: 0 0.4rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --background: rgba(6, 118, 232, 0.05);
-  --border-radius: 8px;
+  --border-radius: 10px;
 }
 
 .view-detail-button:hover {
   --color: white;
-  --background: var(--ecora-blue-bright);
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(0, 50, 255, 0.3);
+  --background: linear-gradient(135deg, var(--ecora-blue-secondary), var(--ecora-blue-bright));
+  transform: scale(1.08);
+  box-shadow: 0 3px 10px rgba(0, 50, 255, 0.25);
 }
 
 .view-detail-button ion-icon {
-  font-size: 1.5rem;
-  transition: transform 0.3s ease;
+  font-size: 1.4rem;
+  transition: transform 0.25s ease;
 }
 
 .view-detail-button:hover ion-icon {
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 /* Botones de escritorio (editar y eliminar) */
@@ -170,9 +170,9 @@
 .desktop-delete-button {
   --padding-start: 0.5rem;
   --padding-end: 0.5rem;
-  margin: 0 0.25rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --border-radius: 8px;
+  margin: 0 0.2rem;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --border-radius: 10px;
 }
 
 .desktop-edit-button {
@@ -181,27 +181,27 @@
 }
 
 .desktop-edit-button:hover {
-  --background: var(--ecora-blue-primary);
+  --background: linear-gradient(135deg, var(--ecora-blue-primary), var(--ecora-blue-secondary));
   --color: white;
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(6, 118, 232, 0.3);
+  transform: scale(1.08);
+  box-shadow: 0 3px 10px rgba(6, 118, 232, 0.25);
 }
 
 .desktop-delete-button {
-  --color: var(--ion-color-danger);
-  --background: rgba(245, 61, 61, 0.05);
+  --color: #e53e3e;
+  --background: rgba(229, 62, 62, 0.05);
 }
 
 .desktop-delete-button:hover {
-  --background: var(--ion-color-danger);
+  --background: linear-gradient(135deg, #e53e3e, #c53030);
   --color: white;
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(245, 61, 61, 0.3);
+  transform: scale(1.08);
+  box-shadow: 0 3px 10px rgba(229, 62, 62, 0.25);
 }
 
 .desktop-edit-button ion-icon,
 .desktop-delete-button ion-icon {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 }
 
 /* Botón de agregar hijo */
@@ -209,15 +209,19 @@
   --color: var(--ecora-blue-secondary);
   --padding-start: 0.5rem;
   --padding-end: 0.5rem;
-  margin: 0 0.25rem;
+  margin: 0 0.2rem;
+  --border-radius: 10px;
+  --background: transparent;
+  transition: all 0.25s;
 }
 
 .add-child-button:hover {
   --color: var(--ecora-blue-bright);
+  --background: rgba(6, 118, 232, 0.06);
 }
 
 .add-child-button ion-icon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
 }
 
 /* Lista de hijos */
@@ -237,7 +241,7 @@
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(-8px);
   }
   to {
     opacity: 1;
@@ -248,16 +252,16 @@
 /* Resaltado de búsqueda */
 .search-highlight {
   background-color: var(--ecora-coral);
-  color: var(--ecora-blue-primary); /* Azul oscuro para mejor contraste */
-  padding: 0.125rem 0.25rem;
-  border-radius: 3px;
+  color: var(--ecora-blue-primary);
+  padding: 0.1rem 0.25rem;
+  border-radius: 4px;
   font-weight: 600;
 }
 
 /* Drag & drop styles */
 .section-item-container.dragging {
-  opacity: 0.5;
-  transform: scale(0.98);
+  opacity: 0.4;
+  transform: scale(0.97);
   cursor: grabbing;
 }
 
@@ -270,31 +274,41 @@
 ion-item-option {
   font-family: var(--ecora-font-primary);
   font-weight: 600;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
 }
 
 /* === CHECKBOX DE SELECCIÓN === */
 .selection-checkbox {
-  --size: 22px;
-  --checkbox-background: white;
-  --checkbox-background-checked: var(--ecora-blue-primary);
-  --border-color: var(--ecora-blue-secondary);
+  --size: 24px;
+  --checkbox-background: #f0f4ff;
+  --checkbox-background-checked: linear-gradient(135deg, var(--ecora-blue-primary), var(--ecora-blue-secondary));
+  --border-color: rgba(6, 118, 232, 0.3);
   --border-color-checked: var(--ecora-blue-primary);
+  --border-width: 2px;
   --checkmark-color: white;
-  margin-right: 8px;
+  --checkmark-width: 3px;
+  margin-right: 10px;
   margin-left: 0;
+  transition: all 0.2s;
 }
 
 .selection-checkbox::part(container) {
-  border-radius: 6px;
+  border-radius: 7px;
   border-width: 2px;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 40, 115, 0.08);
+}
+
+.selection-checkbox:hover::part(container) {
+  border-color: var(--ecora-blue-secondary);
+  box-shadow: 0 2px 8px rgba(6, 118, 232, 0.15);
 }
 
 /* Estado seleccionado del item */
 .section-item.is-selected {
-  --background: rgba(6, 118, 232, 0.08);
+  --background: linear-gradient(135deg, rgba(6, 118, 232, 0.06), rgba(6, 118, 232, 0.02));
   border-left-color: var(--ecora-blue-primary) !important;
-  box-shadow: 0 4px 16px rgba(6, 118, 232, 0.2);
+  box-shadow: 0 3px 14px rgba(6, 118, 232, 0.15), inset 0 0 0 1px rgba(6, 118, 232, 0.08);
 }
 
 .section-item.is-selected::after {
@@ -303,12 +317,11 @@ ion-item-option {
   right: 0;
   top: 0;
   bottom: 0;
-  width: 4px;
-  background: var(--ecora-blue-primary);
+  width: 3px;
+  background: linear-gradient(to bottom, var(--ecora-blue-secondary), var(--ecora-blue-primary));
   border-radius: 0 8px 8px 0;
 }
 
-/* Animación de selección */
 .section-item.is-selected .section-title {
   color: var(--ecora-blue-primary);
 }
@@ -316,33 +329,34 @@ ion-item-option {
 /* Responsive */
 @media (max-width: 768px) {
   .section-item {
-    margin: 10px 0;
+    margin: 8px 0;
     --padding-top: 14px;
     --padding-bottom: 14px;
     --padding-start: 12px;
-    --padding-end: 12px;
+    --padding-end: 10px;
+    border-radius: 14px;
   }
 
   .section-title {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     padding-top: 2px;
   }
 
   .section-description {
-    font-size: 0.8rem;
-    padding-top: 8px;
-    padding-bottom: 6px;
+    font-size: 0.78rem;
+    padding-top: 6px;
+    padding-bottom: 4px;
   }
 
   .children-list {
-    margin-top: 6px;
+    margin-top: 4px;
   }
 
   .add-child-button ion-icon {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
   }
 
   .expand-icon {
-    margin-right: 8px;
+    margin-right: 6px;
   }
 }

@@ -1,6 +1,6 @@
 {
   "appId": "com.ecora.app",
-  "appName": "Ecora",
+  "appName": "EcoraClic",
   "webDir": "dist",
   "server": {
     "androidScheme": "https",
@@ -26,6 +26,9 @@
       ],
       "serverClientId": "331686188304-ucgqkqh4q7qj5lqrl7epn52i85ka3n0d.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
+    },
+    "CapacitorHttp": {
+      "enabled": true
     },
     "SplashScreen": {
       "launchShowDuration": 2000,

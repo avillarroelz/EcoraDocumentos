@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware - CORS con soporte para Netlify y múltiples orígenes
-const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100'];
+const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100', 'http://localhost', 'https://localhost'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -191,6 +191,67 @@ app.get('/api/google/auth', (req, res) => {
       success: false,
       error: 'Error al generar URL de autenticación',
       message: error.message
+    });
+  }
+});
+
+// Autenticación nativa desde Capacitor (Android/iOS)
+app.post('/api/google/auth/native', async (req, res) => {
+  try {
+    const { idToken, accessToken, serverAuthCode, user } = req.body;
+
+    console.log('[Native Auth] Recibido login nativo para:', user?.email);
+
+    if (!user || !user.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Datos de usuario incompletos'
+      });
+    }
+
+    // Si tenemos serverAuthCode, intercambiar por tokens completos (incluye refresh_token)
+    if (serverAuthCode) {
+      try {
+        const tokens = await googleDrive.getTokens(serverAuthCode);
+        googleDrive.setCredentials(tokens);
+        req.session.googleTokens = tokens;
+        console.log('[Native Auth] Tokens obtenidos via serverAuthCode');
+      } catch (tokenError) {
+        console.warn('[Native Auth] Error con serverAuthCode, usando accessToken:', tokenError.message);
+        if (accessToken) {
+          const tokens = { access_token: accessToken };
+          googleDrive.setCredentials(tokens);
+          req.session.googleTokens = tokens;
+        }
+      }
+    } else if (accessToken) {
+      const tokens = { access_token: accessToken };
+      googleDrive.setCredentials(tokens);
+      req.session.googleTokens = tokens;
+    }
+
+    // Guardar info del usuario en sesión
+    req.session.user = {
+      id: user.id,
+      email: user.email,
+      name: user.name || user.givenName,
+      picture: user.imageUrl,
+      verified_email: true
+    };
+
+    console.log('[Native Auth] Sesión creada para:', user.email);
+
+    res.json({
+      success: true,
+      user: req.session.user,
+      message: 'Autenticación nativa exitosa'
+    });
+
+  } catch (error) {
+    console.error('[Native Auth] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Error en autenticación nativa'
     });
   }
 });

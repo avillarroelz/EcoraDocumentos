@@ -40,7 +40,7 @@
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 /* Header title en toolbar */

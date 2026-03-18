@@ -69,6 +69,10 @@ const Home = ({ user, onLogout }) => {
   // Estado del modo de edición (solo relevante para admins)
   const [editMode, setEditMode] = useState(false);
 
+  // Estados para expandir/colapsar secciones
+  const [expandedIds, setExpandedIds] = useState(new Set());
+  const [expandedIdsInitialized, setExpandedIdsInitialized] = useState(false);
+
   // Estados para selección múltiple
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [fabExpanded, setFabExpanded] = useState(false);
@@ -89,6 +93,31 @@ const Home = ({ user, onLogout }) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [isNative]);
+
+  // Helper: recopilar todos los IDs de secciones que tienen hijos
+  const collectAllParentIds = (items) => {
+    const ids = new Set();
+    const traverse = (list) => {
+      list.forEach(item => {
+        if (item.children && item.children.length > 0) {
+          ids.add(item.id);
+          traverse(item.children);
+        }
+      });
+    };
+    traverse(items);
+    return ids;
+  };
+
+  // Toggle expandir/colapsar una sección
+  const handleToggleExpand = (id) => {
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Cargar datos desde localStorage al iniciar (específicos por usuario)
   useEffect(() => {
@@ -157,6 +186,30 @@ const Home = ({ user, onLogout }) => {
     }
   }, [user]);
 
+  // Inicializar expandedIds cuando se cargan las secciones
+  useEffect(() => {
+    if (!user || !user.email || sections.length === 0 || expandedIdsInitialized) return;
+
+    const savedExpandedIds = localStorage.getItem(`ecoraExpandedIds_${user.email}`);
+    const defaultExpandedIds = localStorage.getItem('ecoraExpandedIds_defaults');
+
+    if (savedExpandedIds) {
+      setExpandedIds(new Set(JSON.parse(savedExpandedIds)));
+    } else if (defaultExpandedIds) {
+      setExpandedIds(new Set(JSON.parse(defaultExpandedIds)));
+    } else {
+      // Por defecto, expandir todas las carpetas con hijos
+      setExpandedIds(collectAllParentIds(sections));
+    }
+    setExpandedIdsInitialized(true);
+  }, [sections, user, expandedIdsInitialized]);
+
+  // Persistir expandedIds cuando cambian
+  useEffect(() => {
+    if (!user || !user.email || !expandedIdsInitialized) return;
+    localStorage.setItem(`ecoraExpandedIds_${user.email}`, JSON.stringify([...expandedIds]));
+  }, [expandedIds, user, expandedIdsInitialized]);
+
   // Guardar datos en localStorage cada vez que cambien (específicos por usuario)
   useEffect(() => {
     if (!user || !user.email) return;
@@ -179,13 +232,34 @@ const Home = ({ user, onLogout }) => {
     }
   }, [sections, searchQuery]);
 
-  // Función recursiva para filtrar secciones
+  // Calcular score de relevancia para un item
+  const getRelevanceScore = (item, query) => {
+    const q = query.toLowerCase();
+    const title = (item.title || '').toLowerCase();
+    const desc = (item.description || '').toLowerCase();
+    let score = 0;
+
+    // Coincidencia exacta del título (mayor relevancia)
+    if (title === q) score += 100;
+    // El título empieza con la búsqueda
+    else if (title.startsWith(q)) score += 80;
+    // Coincidencia de palabra completa en título
+    else if (title.split(/\s+/).some(w => w.startsWith(q))) score += 60;
+    // Título contiene la búsqueda
+    else if (title.includes(q)) score += 40;
+
+    // Coincidencia en descripción (menor peso)
+    if (desc.includes(q)) score += 15;
+
+    return score;
+  };
+
+  // Función recursiva para filtrar y ordenar secciones por relevancia
   const filterSections = (items, query) => {
     let count = 0;
     const filtered = items.filter(item => {
-      const titleMatch = item.title.toLowerCase().includes(query.toLowerCase());
-      const descMatch = item.description?.toLowerCase().includes(query.toLowerCase());
-      const matches = titleMatch || descMatch;
+      const score = getRelevanceScore(item, query);
+      const matches = score > 0;
 
       let childrenFiltered = [];
       let childrenCount = 0;
@@ -202,8 +276,16 @@ const Home = ({ user, onLogout }) => {
       return matches || childrenFiltered.length > 0;
     }).map(item => ({
       ...item,
+      _score: getRelevanceScore(item, query),
       children: item.children ? filterSections(item.children, query).filtered : []
-    }));
+    })).sort((a, b) => {
+      // Ordenar: items con coincidencia directa primero, luego por score
+      const aHasDirectMatch = a._score > 0;
+      const bHasDirectMatch = b._score > 0;
+      if (aHasDirectMatch && !bHasDirectMatch) return -1;
+      if (!aHasDirectMatch && bHasDirectMatch) return 1;
+      return b._score - a._score;
+    });
 
     return { filtered, count };
   };
@@ -400,7 +482,8 @@ const Home = ({ user, onLogout }) => {
     if (!isAdmin) return;
 
     localStorage.setItem('ecoraHierarchy_defaults', JSON.stringify(sections));
-    alert('✅ Datos guardados como predeterminados.\n\nTodos los nuevos usuarios recibirán esta estructura de secciones al iniciar sesión por primera vez.');
+    localStorage.setItem('ecoraExpandedIds_defaults', JSON.stringify([...expandedIds]));
+    alert('✅ Datos guardados como predeterminados.\n\nTodos los nuevos usuarios recibirán esta estructura de secciones (incluyendo el estado abierto/cerrado de las carpetas) al iniciar sesión por primera vez.');
   };
 
   // Handlers drag & drop
@@ -828,7 +911,7 @@ const Home = ({ user, onLogout }) => {
           <div className="content-header">
             <h1 className="page-title">Ecora Clic</h1>
             <p className="page-subtitle">
-              Gestión documental inteligente
+              Todo en un clic
             </p>
           </div>
 
@@ -921,6 +1004,8 @@ const Home = ({ user, onLogout }) => {
                   isSelected={selectedItems.has(section.id)}
                   onToggleSelect={toggleSelectItem}
                   selectedItems={selectedItems}
+                  expandedIds={expandedIds}
+                  onToggleExpand={handleToggleExpand}
                 />
               ))}
             </IonList>
