@@ -27,7 +27,16 @@ else
   echo "▶ Plataforma iOS ya existe, omitiendo cap add."
 fi
 
-# 4. Sincronizar assets y plugins
+# 4. Generar íconos y splash (usa resources/icon.png como fuente)
+#    Esto produce íconos iOS idénticos a Android a partir del mismo archivo fuente
+if [ -f "resources/icon.png" ]; then
+  echo "▶ Generando íconos y splash desde resources/icon.png..."
+  npm run generate:icons
+else
+  echo "⚠ No se encontró resources/icon.png — omitiendo generación de íconos"
+fi
+
+# 5. Sincronizar assets y plugins
 echo "▶ Sincronizando con iOS (cap sync)..."
 npx cap sync ios
 

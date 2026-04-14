@@ -13,7 +13,8 @@
     "open:android": "npx cap open android",
     "open:ios": "npx cap open ios",
     "android": "npm run build:android && npx cap run android",
-    "ios": "npm run build:ios && npx cap run ios"
+    "ios": "npm run build:ios && npx cap run ios",
+    "generate:icons": "capacitor-assets generate --iconBackgroundColor #002873 --iconBackgroundColorDark #002873 --splashBackgroundColor #002873 --splashBackgroundColorDark #002873"
   },
   "dependencies": {
     "@capacitor/browser": "^5.2.1",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@capacitor/android": "^5.5.0",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^5.5.0",
     "@capacitor/core": "^5.5.0",
     "@capacitor/ios": "^5.5.0",
