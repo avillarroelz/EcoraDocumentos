@@ -20,9 +20,45 @@ build/
 # Google Services
 google-services.json
 
-# Database dumps
+# Database dumps y exports (pueden contener datos sensibles)
 *.sql
 *.dump
+backend/export_*.json
+ecora_dump.txt
+
+# Backups antiguos
+*.old.js
+
+# Artefactos de build/deploy
+*.apk
+*.zip
+apk_info.txt
+
+# Logs y outputs
+logcat_output.txt
+screen.png
+
+# Archivos temporales
+temp_*
+create-backend-zip.ps1
+
+# Reportes y docs temporales (no trackear)
+IMPLEMENTACION_COMPLETADA.md
+IMPLEMENTATION_STATUS.md
+REPORTE_TESTING_COMPLETO.md
+TEST_IMPORTACION_RECURSIVA.md
+BOTON_IMPORTACION_CARPETAS.md
+IMPORTACION_VS_SINCRONIZACION.md
+
+# Herramientas de agentes (Claude Code, Kiro, etc.)
+.agent/
+.agents/
+.kiro/
+.claude/agents/
+.claude/skills/
+.claude/agent-memory/
+.claude/settings.local.json
+skills-lock.json
 
 # IDE
 .vscode/
