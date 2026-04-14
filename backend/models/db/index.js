@@ -35,6 +35,7 @@ db.Rol = require("./rol.model")(sequelize, Sequelize);
 db.UsuarioRol = require("./usuarioRol.model")(sequelize, Sequelize);
 db.UsuarioUnidadNegocio = require("./usuarioUnidadNegocio.model")(sequelize, Sequelize);
 db.Seccion = require("./seccion.model")(sequelize, Sequelize);
+db.AppConfig = require("./appConfig.model")(sequelize, Sequelize);
 
 // ========================================
 // RELACIONES
@@ -116,6 +117,12 @@ db.Seccion.hasMany(db.Seccion, {
 db.Seccion.belongsTo(db.Seccion, {
   as: "padre",
   foreignKey: "parentId"
+});
+
+// AppConfig - Usuario (quien actualizó) (N:1)
+db.AppConfig.belongsTo(db.Usuario, {
+  as: "actualizador",
+  foreignKey: "actualizadoPor"
 });
 
 module.exports = db;

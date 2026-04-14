@@ -28,6 +28,9 @@
     "googleapis": "^166.0.0",
     "helmet": "^8.1.0",
     "morgan": "^1.10.0",
+    "pg": "^8.20.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.8",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

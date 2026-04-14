@@ -37,6 +37,7 @@ import SearchBar from '../components/SearchBar';
 import GoogleDriveModal from '../components/GoogleDriveModal';
 import MoveSectionModal from '../components/MoveSectionModal';
 import SyncFolderModal from '../components/SyncFolderModal';
+import { API_BASE } from '../config/api';
 import './Home.css';
 
 const Home = ({ user, onLogout }) => {
@@ -119,70 +120,59 @@ const Home = ({ user, onLogout }) => {
     });
   };
 
-  // Cargar datos desde localStorage al iniciar (específicos por usuario)
+  // Cargar datos al iniciar: localStorage personal → defaults del backend → datos de ejemplo
   useEffect(() => {
     if (!user || !user.email) return;
 
-    // Crear clave única por usuario usando su email
     const userStorageKey = `ecoraHierarchy_${user.email}`;
     const savedSections = localStorage.getItem(userStorageKey);
 
     if (savedSections) {
       setSections(JSON.parse(savedSections));
     } else {
-      // Intentar cargar datos predeterminados configurados por el admin
-      const defaultData = localStorage.getItem('ecoraHierarchy_defaults');
-
-      let initialData;
-      if (defaultData) {
-        // Usar datos predeterminados del admin
-        initialData = JSON.parse(defaultData);
-      } else {
-        // Datos de ejemplo iniciales si no hay predeterminados
-        initialData = [
-          {
-            id: '1',
-            title: 'Proyectos de Obras Civiles',
-            description: 'Gestión integral de proyectos de construcción',
-            children: [
+      // Cargar defaults del backend (configurados por el admin)
+      fetch(`${API_BASE}/config/defaults`, { credentials: 'include' })
+        .then(res => res.ok ? res.json() : null)
+        .then(result => {
+          let initialData;
+          if (result?.data?.hierarchy) {
+            initialData = result.data.hierarchy;
+          } else {
+            // Datos de ejemplo si no hay defaults configurados
+            initialData = [
               {
-                id: '1-1',
-                title: 'Planificación',
-                description: 'Etapa de diseño y planificación del proyecto',
+                id: '1',
+                title: 'Proyectos de Obras Civiles',
+                description: 'Gestión integral de proyectos de construcción',
                 children: [
-                  {
-                    id: '1-1-1',
-                    title: 'Estudios de Factibilidad',
-                    description: 'Análisis técnico y económico',
-                    children: []
-                  }
+                  { id: '1-1', title: 'Planificación', description: 'Etapa de diseño y planificación del proyecto', children: [
+                    { id: '1-1-1', title: 'Estudios de Factibilidad', description: 'Análisis técnico y económico', children: [] }
+                  ]},
+                  { id: '1-2', title: 'Ejecución', description: 'Construcción y desarrollo del proyecto', children: [] }
                 ]
               },
               {
-                id: '1-2',
-                title: 'Ejecución',
-                description: 'Construcción y desarrollo del proyecto',
-                children: []
+                id: '2',
+                title: 'Mantención de Infraestructura',
+                description: 'Servicios de mantenimiento preventivo y correctivo',
+                children: [
+                  { id: '2-1', title: 'Mantenimiento Preventivo', description: 'Inspecciones y mantenimiento programado', children: [] }
+                ]
               }
-            ]
-          },
-          {
-            id: '2',
-            title: 'Mantención de Infraestructura',
-            description: 'Servicios de mantenimiento preventivo y correctivo',
-            children: [
-              {
-                id: '2-1',
-                title: 'Mantenimiento Preventivo',
-                description: 'Inspecciones y mantenimiento programado',
-                children: []
-              }
-            ]
+            ];
           }
-        ];
-      }
-      setSections(initialData);
-      localStorage.setItem(userStorageKey, JSON.stringify(initialData));
+          setSections(initialData);
+          localStorage.setItem(userStorageKey, JSON.stringify(initialData));
+        })
+        .catch(() => {
+          // Fallback: datos de ejemplo si el backend no responde
+          const fallback = [
+            { id: '1', title: 'Proyectos de Obras Civiles', description: 'Gestión integral de proyectos', children: [] },
+            { id: '2', title: 'Mantención de Infraestructura', description: 'Mantenimiento preventivo y correctivo', children: [] }
+          ];
+          setSections(fallback);
+          localStorage.setItem(userStorageKey, JSON.stringify(fallback));
+        });
     }
   }, [user]);
 
@@ -191,17 +181,27 @@ const Home = ({ user, onLogout }) => {
     if (!user || !user.email || sections.length === 0 || expandedIdsInitialized) return;
 
     const savedExpandedIds = localStorage.getItem(`ecoraExpandedIds_${user.email}`);
-    const defaultExpandedIds = localStorage.getItem('ecoraExpandedIds_defaults');
 
     if (savedExpandedIds) {
       setExpandedIds(new Set(JSON.parse(savedExpandedIds)));
-    } else if (defaultExpandedIds) {
-      setExpandedIds(new Set(JSON.parse(defaultExpandedIds)));
+      setExpandedIdsInitialized(true);
     } else {
-      // Por defecto, expandir todas las carpetas con hijos
-      setExpandedIds(collectAllParentIds(sections));
+      // Intentar cargar defaults del backend
+      fetch(`${API_BASE}/config/defaults`, { credentials: 'include' })
+        .then(res => res.ok ? res.json() : null)
+        .then(result => {
+          if (result?.data?.expandedIds) {
+            setExpandedIds(new Set(result.data.expandedIds));
+          } else {
+            setExpandedIds(collectAllParentIds(sections));
+          }
+          setExpandedIdsInitialized(true);
+        })
+        .catch(() => {
+          setExpandedIds(collectAllParentIds(sections));
+          setExpandedIdsInitialized(true);
+        });
     }
-    setExpandedIdsInitialized(true);
   }, [sections, user, expandedIdsInitialized]);
 
   // Persistir expandedIds cuando cambian
@@ -478,12 +478,31 @@ const Home = ({ user, onLogout }) => {
   };
 
   // Función para guardar datos actuales como predeterminados (solo admin)
-  const handleSaveAsDefaults = () => {
+  const handleSaveAsDefaults = async () => {
     if (!isAdmin) return;
 
-    localStorage.setItem('ecoraHierarchy_defaults', JSON.stringify(sections));
-    localStorage.setItem('ecoraExpandedIds_defaults', JSON.stringify([...expandedIds]));
-    alert('✅ Datos guardados como predeterminados.\n\nTodos los nuevos usuarios recibirán esta estructura de secciones (incluyendo el estado abierto/cerrado de las carpetas) al iniciar sesión por primera vez.');
+    try {
+      const response = await fetch(`${API_BASE}/config/defaults`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          hierarchy: sections,
+          expandedIds: [...expandedIds]
+        })
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Datos guardados como predeterminados.\n\nTodos los usuarios (nuevos y existentes sin personalización) verán esta estructura al iniciar sesión.');
+      } else {
+        alert('Error al guardar: ' + (result.error || 'Error desconocido'));
+      }
+    } catch (error) {
+      console.error('Error guardando defaults:', error);
+      alert('No se pudo conectar al servidor para guardar los datos predeterminados.');
+    }
   };
 
   // Handlers drag & drop

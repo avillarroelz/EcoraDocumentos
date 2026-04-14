@@ -91,6 +91,10 @@ app.use(session({
   }
 }));
 
+// Rutas modularizadas
+const configRoutes = require('./routes/config');
+app.use('/api/config', configRoutes);
+
 // Instancia del servicio de Google Drive
 const googleDrive = new GoogleDriveService();
 
