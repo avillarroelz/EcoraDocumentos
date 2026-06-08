@@ -25,6 +25,7 @@
         "https://www.googleapis.com/auth/drive.readonly"
       ],
       "serverClientId": "331686188304-ucgqkqh4q7qj5lqrl7epn52i85ka3n0d.apps.googleusercontent.com",
+      "iosClientId": "331686188304-66pcn5ena9jase7ldph5hjc5en9vor1a.apps.googleusercontent.com",
       "forceCodeForRefreshToken": true
     },
     "CapacitorHttp": {

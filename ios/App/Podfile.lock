@@ -1,0 +1,60 @@
+PODS:
+  - AppAuth (1.7.6):
+    - AppAuth/Core (= 1.7.6)
+    - AppAuth/ExternalUserAgent (= 1.7.6)
+  - AppAuth/Core (1.7.6)
+  - AppAuth/ExternalUserAgent (1.7.6):
+    - AppAuth/Core
+  - Capacitor (5.7.8):
+    - CapacitorCordova
+  - CapacitorBrowser (5.2.1):
+    - Capacitor
+  - CapacitorCordova (5.7.8)
+  - CodetrixStudioCapacitorGoogleAuth (0.0.1):
+    - Capacitor
+    - GoogleSignIn (~> 6.2.4)
+  - GoogleSignIn (6.2.4):
+    - AppAuth (~> 1.5)
+    - GTMAppAuth (~> 1.3)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
+  - GTMAppAuth (1.3.1):
+    - AppAuth/Core (~> 1.6)
+    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
+  - GTMSessionFetcher/Core (2.3.0)
+
+DEPENDENCIES:
+  - "Capacitor (from `../../node_modules/@capacitor/ios`)"
+  - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
+  - "CodetrixStudioCapacitorGoogleAuth (from `../../node_modules/@codetrix-studio/capacitor-google-auth`)"
+
+SPEC REPOS:
+  trunk:
+    - AppAuth
+    - GoogleSignIn
+    - GTMAppAuth
+    - GTMSessionFetcher
+
+EXTERNAL SOURCES:
+  Capacitor:
+    :path: "../../node_modules/@capacitor/ios"
+  CapacitorBrowser:
+    :path: "../../node_modules/@capacitor/browser"
+  CapacitorCordova:
+    :path: "../../node_modules/@capacitor/ios"
+  CodetrixStudioCapacitorGoogleAuth:
+    :path: "../../node_modules/@codetrix-studio/capacitor-google-auth"
+
+SPEC CHECKSUMS:
+  AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
+  Capacitor: 9686e5711b48a1aa84671ede795d0175848abcba
+  CapacitorBrowser: f13ada96777742309ae17a974e934eda8e102508
+  CapacitorCordova: 31ab98dca2ddcee051027a1afe7e8c85c82f7297
+  CodetrixStudioCapacitorGoogleAuth: 9dcfabfb7dd804ad6231a1513bc6e81e620cbec6
+  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
+  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
+  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+
+PODFILE CHECKSUM: 79f9bcfe68a50baed4ff680ebace45c100e36889
+
+COCOAPODS: 1.16.2
