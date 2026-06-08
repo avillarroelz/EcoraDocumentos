@@ -1,8 +1,8 @@
 // Configuración de API para diferentes plataformas
 import { Capacitor } from '@capacitor/core';
 
-// URL del backend en producción (AWS Elastic Beanstalk con HTTPS)
-const PRODUCTION_API_URL = 'https://ecora-prod-v3.eba-tdqgyq2z.us-east-1.elasticbeanstalk.com/api';
+// URL del backend en producción (AWS Elastic Beanstalk tras dominio propio con HTTPS)
+const PRODUCTION_API_URL = 'https://clic.ecoraapp.com/api';
 
 // URL del backend local para pruebas
 // 10.0.2.2 es el alias del host desde el emulador Android

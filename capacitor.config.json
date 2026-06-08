@@ -6,7 +6,7 @@
     "androidScheme": "https",
     "cleartext": false,
     "allowNavigation": [
-      "ecora-prod-v3.eba-tdqgyq2z.us-east-1.elasticbeanstalk.com"
+      "clic.ecoraapp.com"
     ]
   },
   "android": {
