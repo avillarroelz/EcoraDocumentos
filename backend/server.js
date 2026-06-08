@@ -86,7 +86,10 @@ app.use(session({
   cookie: {
     secure: isProduction, // true en producción (HTTPS vía ALB)
     httpOnly: true,
-    sameSite: 'lax',
+    // 'none' en producción: la app nativa (iOS capacitor://localhost, Android https://localhost)
+    // y el frontend web (Vercel) llaman al backend de forma cross-site, por lo que la cookie
+    // de sesión solo se reenvía con SameSite=None; Secure. En desarrollo se usa 'lax'.
+    sameSite: isProduction ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
 }));
