@@ -131,13 +131,22 @@ const requireRole = (roles) => {
 
     const allowedRoles = Array.isArray(roles) ? roles : [roles];
 
-    if (!allowedRoles.includes(req.user.role)) {
+    // Evaluar TODOS los roles del usuario, no solo el primero.
+    // Un usuario puede tener varios roles (p. ej. super_admin + viewer) y el
+    // orden del array no está garantizado, por lo que verificamos intersección.
+    const userRoles = Array.isArray(req.user.roles) && req.user.roles.length > 0
+      ? req.user.roles
+      : [req.user.role];
+
+    const tieneRolPermitido = userRoles.some(rol => allowedRoles.includes(rol));
+
+    if (!tieneRolPermitido) {
       return res.status(403).json({
         success: false,
         error: 'Acceso denegado',
         message: 'No tiene el rol necesario para acceder a este recurso',
         requiredRoles: allowedRoles,
-        currentRole: req.user.role
+        currentRoles: userRoles
       });
     }
 
