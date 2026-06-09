@@ -2,6 +2,7 @@
  * Middleware de Autenticación y Autorización
  */
 
+const { Op } = require('sequelize');
 const { getUserById, hasPermission } = require('../models/userRoles');
 const db = require('../models/db');
 
@@ -19,8 +20,16 @@ const requireAuth = async (req, res, next) => {
       });
     }
 
-    // Buscar usuario en la base de datos de Sequelize
-    const usuario = await db.Usuario.findByPk(req.session.user.id, {
+    // Buscar usuario en la base de datos de Sequelize.
+    // OJO: req.session.user.id es el ID de Google (no el UUID de la tabla),
+    // por eso se busca por googleId con respaldo por email.
+    const usuario = await db.Usuario.findOne({
+      where: {
+        [Op.or]: [
+          { googleId: String(req.session.user.id) },
+          { email: req.session.user.email }
+        ]
+      },
       include: [
         {
           model: db.Rol,
@@ -47,8 +56,8 @@ const requireAuth = async (req, res, next) => {
       });
     }
 
-    // Verificar que el usuario está activo
-    if (usuario.estado !== 'activo') {
+    // Verificar que el usuario está activo (estado es BOOLEAN en el modelo)
+    if (usuario.estado === false) {
       return res.status(403).json({
         success: false,
         error: 'Usuario desactivado',
