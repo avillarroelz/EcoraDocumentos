@@ -416,10 +416,9 @@ Si se desea continuar mejorando la aplicación:
    - Integration tests con Supertest
    - E2E tests con Cypress
 
-4. **Deploy a Producción**
-   - Frontend: Vercel/Netlify
-   - Backend: Heroku/Railway/DigitalOcean
-   - Base de datos: MongoDB Atlas/Supabase
+4. **Deploy a Producción** (todo en AWS)
+   - Backend + frontend web: AWS Elastic Beanstalk (dominio `clic.ecoraapp.com`)
+   - Base de datos: PostgreSQL en AWS RDS (sa-east-1)
 
 5. **Features Avanzados**
    - Export/import de datos (JSON, Excel)

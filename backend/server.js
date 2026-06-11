@@ -58,11 +58,6 @@ app.use(cors({
       return callback(null, true);
     }
 
-    // Permitir subdominios específicos de Vercel para el frontend desplegado
-    if (origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
-
     callback(new Error('No permitido por CORS'));
   },
   credentials: true
@@ -87,8 +82,8 @@ app.use(session({
     secure: isProduction, // true en producción (HTTPS vía ALB)
     httpOnly: true,
     // 'none' en producción: la app nativa (iOS capacitor://localhost, Android https://localhost)
-    // y el frontend web (Vercel) llaman al backend de forma cross-site, por lo que la cookie
-    // de sesión solo se reenvía con SameSite=None; Secure. En desarrollo se usa 'lax'.
+    // llama al backend de forma cross-site, por lo que la cookie de sesión solo se reenvía
+    // con SameSite=None; Secure. En desarrollo se usa 'lax'.
     sameSite: isProduction ? 'none' : 'lax',
     maxAge: 24 * 60 * 60 * 1000 // 24 horas
   }
@@ -857,6 +852,74 @@ app.post('/api/sections/reset', (req, res) => {
       message: isProduction ? 'Error interno' : error.message
     });
   }
+});
+
+// Política de Privacidad — página pública (requerida por App Store / Google Play)
+// Servida desde el backend porque clic.ecoraapp.com apunta a este servidor.
+app.get('/privacidad', (req, res) => {
+  res.set('Content-Type', 'text/html; charset=utf-8');
+  res.send(`<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Política de Privacidad — Ecora Clic</title>
+  <style>
+    :root { --azul:#002873; --azul2:#0676e8; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#1a1a2e; background:#f5f7fb; line-height:1.65; }
+    .container { max-width:760px; margin:0 auto; padding:40px 24px 64px; }
+    header { border-bottom:3px solid var(--azul); padding-bottom:16px; margin-bottom:8px; }
+    h1 { color:var(--azul); font-size:2rem; margin:0 0 6px; }
+    .updated { color:#6b7280; font-size:.9rem; margin:0; }
+    h2 { color:var(--azul); font-size:1.2rem; margin:32px 0 8px; }
+    a { color:var(--azul2); }
+    ul { padding-left:20px; }
+    li { margin-bottom:6px; }
+    footer { margin-top:48px; padding-top:16px; border-top:1px solid #e5e7eb; color:#6b7280; font-size:.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Política de Privacidad</h1>
+      <p class="updated">Última actualización: 11 de junio de 2026</p>
+    </header>
+
+    <p>Esta Política de Privacidad describe cómo <strong>Ecora</strong> ("nosotros") recopila, usa y protege la información de los usuarios de la aplicación <strong>Ecora Clic</strong> ("la aplicación"), una herramienta de gestión documental con integración a Google Drive.</p>
+
+    <h2>1. Información que recopilamos</h2>
+    <p>Para autenticarte y permitir el uso de la aplicación, recopilamos:</p>
+    <ul>
+      <li><strong>Datos de cuenta de Google:</strong> nombre, dirección de correo electrónico y foto de perfil, obtenidos al iniciar sesión con Google Sign-In.</li>
+      <li><strong>Identificadores de usuario:</strong> el identificador único de tu cuenta de Google, usado para asociarte a tu organización y permisos.</li>
+      <li><strong>Acceso a Google Drive:</strong> con tu autorización explícita, accedemos en modo solo lectura a los archivos y carpetas que decides sincronizar, para mostrarlos dentro de la estructura documental.</li>
+    </ul>
+
+    <h2>2. Cómo usamos la información</h2>
+    <ul>
+      <li>Autenticar tu identidad y gestionar tu sesión.</li>
+      <li>Asignarte los roles y permisos correspondientes dentro de tu organización.</li>
+      <li>Mostrar y organizar los documentos de Google Drive que decides sincronizar.</li>
+    </ul>
+    <p>No vendemos ni compartimos tu información personal con terceros con fines publicitarios.</p>
+
+    <h2>3. Almacenamiento y seguridad</h2>
+    <p>Los datos se almacenan de forma segura en servidores con cifrado en tránsito (HTTPS/TLS). El acceso a Google Drive es de solo lectura y nunca modificamos ni eliminamos tus archivos originales.</p>
+
+    <h2>4. Servicios de terceros</h2>
+    <p>La aplicación utiliza servicios de Google (Google Sign-In y Google Drive API). El uso de estos servicios está sujeto a la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad de Google</a>.</p>
+
+    <h2>5. Tus derechos</h2>
+    <p>Puedes revocar el acceso de la aplicación a tu cuenta de Google en cualquier momento desde la <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">configuración de seguridad de tu cuenta de Google</a>. También puedes solicitar la eliminación de tus datos escribiéndonos.</p>
+
+    <h2>6. Contacto</h2>
+    <p>Si tienes preguntas sobre esta Política de Privacidad, contáctanos en: <a href="mailto:contacto@ecora.cl">contacto@ecora.cl</a></p>
+
+    <footer>© 2026 Ecora. Todos los derechos reservados.</footer>
+  </div>
+</body>
+</html>`);
 });
 
 // Manejo de rutas no encontradas

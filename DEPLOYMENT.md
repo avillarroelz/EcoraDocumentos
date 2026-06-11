@@ -1,126 +1,78 @@
 # Guía de Deployment - Ecora Documentos
 
-## 🚀 Deploy en Vercel (Recomendado)
+> **Todo el despliegue de Ecora Documentos se realiza en AWS.** No se utiliza Vercel
+> ni Netlify. El backend Express y el frontend web se sirven desde AWS, la base de
+> datos vive en AWS RDS, y las apps móviles se distribuyen por App Store / Play Store.
 
-### Opción 1: Deploy Automático desde GitHub
+La configuración detallada de infraestructura (VPC, Elastic Beanstalk, RDS, dominio
+y certificado HTTPS) está en **`CONFIGURACION_AWS_PRODUCCION.md`**.
 
-1. **Ir a Vercel**
-   - Visita https://vercel.com
-   - Haz clic en "Sign Up" o "Log In"
-   - Selecciona "Continue with GitHub"
+---
 
-2. **Importar el Proyecto**
-   - Una vez autenticado, haz clic en "Add New..." → "Project"
-   - Busca el repositorio `EcoraDocumentos`
-   - Haz clic en "Import"
+## 🌐 Arquitectura de despliegue
 
-3. **Configurar el Proyecto**
-   - Vercel detectará automáticamente que es un proyecto Vite
-   - **Framework Preset**: Vite
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `dist`
-   - **Install Command**: `npm install`
+| Componente | Dónde se despliega |
+|---|---|
+| **Backend (Express + Sequelize)** | AWS Elastic Beanstalk, tras el dominio propio HTTPS `clic.ecoraapp.com` |
+| **Frontend web** | Servido desde AWS (no Vercel/Netlify) |
+| **Páginas públicas** (ej. Política de Privacidad `/privacidad`) | Servidas directamente por el backend Express |
+| **Base de datos** | PostgreSQL en AWS RDS (región `sa-east-1`) |
+| **App Android** | APK firmado con `ecora-release-key.jks` → Google Play |
+| **App iOS** | Build nativo Capacitor (Xcode) → App Store Connect |
 
-4. **Variables de Entorno (Opcional)**
-   - Si quieres habilitar Google OAuth en producción, agrega:
-     - `VITE_GOOGLE_CLIENT_ID`: Tu Client ID de Google
-     - Backend URL si es necesario
+---
 
-5. **Deploy**
-   - Haz clic en "Deploy"
-   - Espera 2-3 minutos
-   - ¡Tu app estará en línea!
+## 🚀 Desplegar el backend en AWS
 
-### Opción 2: Deploy desde CLI
+1. **Build / preparación**
+   ```bash
+   cd backend
+   npm install --production
+   ```
 
+2. **Variables de entorno requeridas** (en la consola de Elastic Beanstalk → Configuration → Environment properties):
+   - `NODE_ENV=production`
+   - `SESSION_SECRET` (obligatorio en producción)
+   - `CORS_ORIGIN` (lista separada por comas de orígenes permitidos)
+   - Credenciales de BD (host RDS, usuario, contraseña, nombre)
+   - Credenciales de Google OAuth (Client ID / Secret)
+
+3. **Deploy a Elastic Beanstalk**
+   - Vía consola AWS (subir bundle ZIP), o
+   - Vía EB CLI:
+     ```bash
+     eb deploy
+     ```
+
+4. **Verificar**
+   - `https://clic.ecoraapp.com/api/health` (o el endpoint de salud correspondiente)
+   - `https://clic.ecoraapp.com/privacidad` → debe mostrar la Política de Privacidad
+
+> Consulta `CONFIGURACION_AWS_PRODUCCION.md` para los pasos completos de
+> infraestructura, dominio y certificado HTTPS.
+
+---
+
+## 📱 Build de apps móviles
+
+### Android
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
+npm run build:android
+cd android && ./gradlew assembleRelease   # APK firmado con ecora-release-key.jks
+```
 
-# Login
-vercel login
-
-# Deploy
-vercel
-
-# Deploy a producción
-vercel --prod
+### iOS (requiere macOS con Xcode)
+```bash
+npm run build:ios
+npx cap open ios     # Product → Archive → Distribute App → App Store Connect
 ```
 
 ---
 
-## 🌐 Deploy en Netlify
+## 📋 Características funcionales en producción
 
-1. **Ir a Netlify**
-   - Visita https://netlify.com
-   - Inicia sesión con GitHub
-
-2. **Importar desde GitHub**
-   - "Add new site" → "Import an existing project"
-   - Conecta con GitHub
-   - Selecciona `EcoraDocumentos`
-
-3. **Configurar Build**
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-
-4. **Deploy**
-   - Haz clic en "Deploy site"
-
----
-
-## 📋 Características del Deploy
-
-### ✅ Funcionalidades que funcionarán:
-- Interfaz de usuario completa
-- Sistema de secciones jerárquicas
-- Búsqueda de secciones
-- Drag & drop para reorganizar
-- Modo de edición para administradores
-- Persistencia en localStorage por usuario
-- Vista responsive (desktop/mobile)
-
-### ⚠️ Limitaciones (solo frontend):
-- **Google OAuth**: Requiere backend en servidor separado
-- **Google Drive**: Requiere backend configurado
-- Los datos se guardan en el navegador (localStorage)
-
----
-
-## 🔧 Para habilitar funcionalidad completa (OAuth + Drive)
-
-Necesitarás deployar el backend por separado:
-
-### Backend en Railway/Render:
-
-1. Crea cuenta en https://railway.app o https://render.com
-2. Conecta el repositorio
-3. Configura las variables de entorno del backend
-4. Actualiza la URL del backend en el frontend
-
----
-
-## 📝 Notas Importantes
-
-- El deploy de Vercel/Netlify es **GRATUITO**
-- Se actualiza **automáticamente** cada vez que haces push a GitHub
-- Incluye **HTTPS** automático
-- Tiene **CDN global** para velocidad óptima
-
----
-
-## 🎯 URL de Ejemplo
-
-Después del deploy, recibirás una URL como:
-- Vercel: `https://ecora-documentos.vercel.app`
-- Netlify: `https://ecora-documentos.netlify.app`
-
-Puedes personalizar el dominio en la configuración del proyecto.
-
----
-
-## 💡 Tips
-
-- Usa Vercel si planeas agregar funciones serverless después
-- Usa Netlify si quieres simplemente hosting estático
-- Ambos tienen excelente soporte para React y Vite
+- Interfaz completa, secciones jerárquicas, búsqueda y reorganización (drag & drop)
+- Modo de edición para administradores, roles y permisos
+- Vista responsive (desktop / mobile)
+- **Google OAuth + Google Drive**: operativos gracias al backend en AWS
+- Datos persistidos en PostgreSQL (AWS RDS)

@@ -70,10 +70,12 @@ Vite proxea `/api` → `http://localhost:3001` (configurado en `vite.config.js`)
 - Auth diferente para web (popup) vs nativo (plugin Capacitor)
 
 ### Despliegue
-- **Frontend**: Vercel (configurado en `vercel.json`, SPA rewrite)
-- **Backend**: AWS (configuración en `CONFIGURACION_AWS_PRODUCCION.md`)
+**Todo el despliegue es en AWS — no se usa Vercel ni Netlify.**
+- **Backend + frontend web**: AWS (Elastic Beanstalk tras dominio propio HTTPS `clic.ecoraapp.com`; configuración en `CONFIGURACION_AWS_PRODUCCION.md`)
 - **BD**: PostgreSQL en AWS RDS (región sa-east-1)
+- **Páginas públicas web** (ej. Política de Privacidad en `/privacidad`): servidas desde el backend Express, no como sitio estático externo
 - **Android**: APK firmado con `ecora-release-key.jks`
+- **iOS**: build nativo Capacitor; el frontend se empaqueta dentro de la app (no depende de hosting web)
 
 ## Colores de marca Ecora
 - Azul principal: `#002873` (dominante)
