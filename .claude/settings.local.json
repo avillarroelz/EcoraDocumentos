@@ -27,7 +27,14 @@
       "Bash(ssh-keygen:*)",
       "Bash(cat:*)",
       "Bash(clip)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "Bash(rm -rf ~/Library/Developer/Xcode/DerivedData/*)",
+      "Bash(rm -rf ~/Library/Developer/CoreSimulator/Caches/*)",
+      "Bash(rm -rf ~/Library/Caches/*)",
+      "Bash(rm -rf ~/.npm/_cacache)",
+      "Bash(rm -rf /private/tmp/claude-647/*/[0-9a-f]*/tasks/*.output)",
+      "Bash(xcrun simctl *)",
+      "Bash(sync)"
     ],
     "deny": [],
     "ask": []

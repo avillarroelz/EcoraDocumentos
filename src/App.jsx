@@ -6,6 +6,7 @@ import { API_BASE } from './config/api';
 import Home from './pages/Home';
 import SectionDetail from './pages/SectionDetail';
 import Login from './pages/Login';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -68,6 +69,9 @@ const App = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
+          <Route exact path="/privacidad">
+            <PrivacyPolicy />
+          </Route>
           <Route exact path="/login">
             {user ? <Redirect to="/home" /> : <Login onLoginSuccess={handleLoginSuccess} />}
           </Route>
