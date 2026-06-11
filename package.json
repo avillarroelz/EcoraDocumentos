@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Aplicación híbrida Ecora - Gestión de secciones jerárquicas",
   "scripts": {
+    "postinstall": "patch-package",
     "dev": "vite",
     "start": "vite",
     "build": "vite build",
@@ -34,6 +35,7 @@
     "@capacitor/core": "^5.5.0",
     "@capacitor/ios": "^5.5.0",
     "@vitejs/plugin-react": "^4.2.0",
+    "patch-package": "^8.0.1",
     "vite": "^5.0.0"
   }
 }

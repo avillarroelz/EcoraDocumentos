@@ -1,0 +1,120 @@
+diff --git a/node_modules/@codetrix-studio/capacitor-google-auth/CodetrixStudioCapacitorGoogleAuth.podspec b/node_modules/@codetrix-studio/capacitor-google-auth/CodetrixStudioCapacitorGoogleAuth.podspec
+index 6432925..9212fae 100644
+--- a/node_modules/@codetrix-studio/capacitor-google-auth/CodetrixStudioCapacitorGoogleAuth.podspec
++++ b/node_modules/@codetrix-studio/capacitor-google-auth/CodetrixStudioCapacitorGoogleAuth.podspec
+@@ -10,6 +10,6 @@
+     s.source_files = 'ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}'
+     s.ios.deployment_target  = '12.0'
+     s.dependency 'Capacitor'
+-    s.dependency 'GoogleSignIn', '~> 6.2.4'
++    s.dependency 'GoogleSignIn', '~> 7.1'
+     s.static_framework = true
+   end
+diff --git a/node_modules/@codetrix-studio/capacitor-google-auth/ios/Plugin/Plugin.swift b/node_modules/@codetrix-studio/capacitor-google-auth/ios/Plugin/Plugin.swift
+index 8ef363d..d2ebee2 100644
+--- a/node_modules/@codetrix-studio/capacitor-google-auth/ios/Plugin/Plugin.swift
++++ b/node_modules/@codetrix-studio/capacitor-google-auth/ios/Plugin/Plugin.swift
+@@ -5,6 +5,9 @@ import GoogleSignIn
+ /**
+  * Please read the Capacitor iOS Plugin Development Guide
+  * here: https://capacitor.ionicframework.com/docs/plugins/ios
++ *
++ * Migrado a la API de GoogleSignIn 7.x para incluir privacy manifests (ITMS-91061).
++ * El contrato hacia el bridge JS se mantiene idéntico.
+  */
+ @objc(GoogleAuth)
+ public class GoogleAuth: CAPPlugin {
+@@ -51,23 +54,37 @@ public class GoogleAuth: CAPPlugin {
+     func signIn(_ call: CAPPluginCall) {
+         signInCall = call;
+         DispatchQueue.main.async {
++            // GoogleSignIn 7.x: la configuración se asigna en la instancia compartida.
++            self.googleSignIn.configuration = self.googleSignInConfiguration;
++
+             if self.googleSignIn.hasPreviousSignIn() && !self.forceAuthCode {
+                 self.googleSignIn.restorePreviousSignIn() { user, error in
+-                if let error = error {
+-                    self.signInCall?.reject(error.localizedDescription);
+-                    return;
+-                }
+-                self.resolveSignInCallWith(user: user!)
++                    if let error = error {
++                        self.signInCall?.reject(error.localizedDescription);
++                        return;
++                    }
++                    guard let user = user else {
++                        self.signInCall?.reject("Could not restore previous sign in.");
++                        return;
++                    }
++                    self.resolveSignInCallWith(user: user);
+                 }
+             } else {
+-                let presentingVc = self.bridge!.viewController!;
++                guard let presentingVc = self.bridge?.viewController else {
++                    self.signInCall?.reject("Could not find presenting view controller.");
++                    return;
++                }
+ 
+-                self.googleSignIn.signIn(with: self.googleSignInConfiguration, presenting: presentingVc, hint: nil, additionalScopes: self.additionalScopes) { user, error in
++                self.googleSignIn.signIn(withPresenting: presentingVc, hint: nil, additionalScopes: self.additionalScopes) { signInResult, error in
+                     if let error = error {
+                         self.signInCall?.reject(error.localizedDescription, "\(error._code)");
+                         return;
+                     }
+-                    self.resolveSignInCallWith(user: user!);
++                    guard let result = signInResult else {
++                        self.signInCall?.reject("Sign in returned no result.");
++                        return;
++                    }
++                    self.resolveSignInCallWith(user: result.user, serverAuthCode: result.serverAuthCode);
+                 };
+             }
+         }
+@@ -76,19 +93,19 @@ public class GoogleAuth: CAPPlugin {
+     @objc
+     func refresh(_ call: CAPPluginCall) {
+         DispatchQueue.main.async {
+-            if self.googleSignIn.currentUser == nil {
++            guard let currentUser = self.googleSignIn.currentUser else {
+                 call.reject("User not logged in.");
+-                return
++                return;
+             }
+-            self.googleSignIn.currentUser!.authentication.do { (authentication, error) in
+-                guard let authentication = authentication else {
++            currentUser.refreshTokensIfNeeded { user, error in
++                guard let user = user else {
+                     call.reject(error?.localizedDescription ?? "Something went wrong.");
+                     return;
+                 }
+                 let authenticationData: [String: Any] = [
+-                    "accessToken": authentication.accessToken,
+-                    "idToken": authentication.idToken ?? NSNull(),
+-                    "refreshToken": authentication.refreshToken
++                    "accessToken": user.accessToken.tokenString,
++                    "idToken": user.idToken?.tokenString ?? NSNull(),
++                    "refreshToken": user.refreshToken.tokenString
+                 ]
+                 call.resolve(authenticationData);
+             }
+@@ -139,14 +156,15 @@ public class GoogleAuth: CAPPlugin {
+         return nil;
+     }
+ 
+-    func resolveSignInCallWith(user: GIDGoogleUser) {
++    func resolveSignInCallWith(user: GIDGoogleUser, serverAuthCode: String? = nil) {
+         var userData: [String: Any] = [
+             "authentication": [
+-                "accessToken": user.authentication.accessToken,
+-                "idToken": user.authentication.idToken,
+-                "refreshToken": user.authentication.refreshToken
++                // GoogleSignIn 7.x: los tokens son objetos GIDToken; se expone .tokenString.
++                "accessToken": user.accessToken.tokenString,
++                "idToken": user.idToken?.tokenString ?? NSNull(),
++                "refreshToken": user.refreshToken.tokenString
+             ],
+-            "serverAuthCode": user.serverAuthCode ?? NSNull(),
++            "serverAuthCode": serverAuthCode ?? NSNull(),
+             "email": user.profile?.email ?? NSNull(),
+             "familyName": user.profile?.familyName ?? NSNull(),
+             "givenName": user.profile?.givenName ?? NSNull(),
