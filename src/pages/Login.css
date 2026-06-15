@@ -153,6 +153,50 @@
   --color: var(--ecora-blue-primary);
 }
 
+/* Acceso demo (revisión App Store) — enlace discreto */
+.demo-toggle-link {
+  display: block;
+  margin: 18px auto 0 auto;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--ecora-font-secondary, inherit);
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.demo-toggle-link:hover {
+  color: #ffffff;
+}
+
+.demo-login-form {
+  max-width: 400px;
+  width: 100%;
+  margin: 16px auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.demo-input {
+  --background: rgba(255, 255, 255, 0.95);
+  --color: #1a1a2e;
+  --placeholder-color: #6b7280;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  border-radius: 12px;
+}
+
+.demo-submit-button {
+  --background: var(--ecora-blue-secondary, #0676e8);
+  --border-radius: 12px;
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  text-transform: none;
+  height: 48px;
+}
+
 /* Mensaje de error */
 .error-message {
   text-align: center;

@@ -166,6 +166,62 @@ class AuthService {
   }
 
   /**
+   * Buscar o crear la cuenta de demostración (para revisión de App Store).
+   * Siempre con rol viewer (solo lectura).
+   */
+  async upsertDemoUser({ email, name }) {
+    try {
+      const includeAssociations = [
+        {
+          model: db.Rol,
+          as: "roles",
+          through: { attributes: [] }
+        },
+        {
+          model: db.UnidadNegocio,
+          as: "unidadesNegocio",
+          through: { attributes: [] },
+          include: [{
+            model: db.LineaNegocio,
+            as: "lineaNegocio"
+          }]
+        }
+      ];
+
+      let usuario = await db.Usuario.findOne({
+        where: { email },
+        include: includeAssociations
+      });
+
+      if (usuario) {
+        await usuario.update({ ultimoLogin: new Date(), estado: true });
+      } else {
+        const viewerRole = await db.Rol.findOne({ where: { nombre: "viewer" } });
+
+        usuario = await db.Usuario.create({
+          email,
+          nombre: name || "Cuenta Demo",
+          estado: true,
+          ultimoLogin: new Date()
+        });
+
+        if (viewerRole) {
+          await usuario.addRole(viewerRole);
+        }
+
+        usuario = await db.Usuario.findByPk(usuario.id, {
+          include: includeAssociations
+        });
+      }
+
+      return usuario;
+    } catch (error) {
+      console.error("Error en upsertDemoUser:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Obtener usuario con permisos
    */
   async getUserWithPermissions(userId) {

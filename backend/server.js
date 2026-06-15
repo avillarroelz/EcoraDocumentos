@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const session = require('express-session');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const appleSignin = require('apple-signin-auth');
 const GoogleDriveService = require('./googleDriveConfig');
@@ -13,6 +14,11 @@ require('dotenv').config();
 
 // Bundle ID de la app iOS — es el "audience" del token de Sign in with Apple
 const APPLE_CLIENT_ID = process.env.APPLE_CLIENT_ID || 'com.ecora.app';
+
+// Cuenta de demostración para revisión de App Store (credenciales fijas vía env).
+// Si no están configuradas, la ruta /api/auth/demo queda deshabilitada.
+const DEMO_USER_EMAIL = process.env.DEMO_USER_EMAIL || '';
+const DEMO_USER_PASSWORD = process.env.DEMO_USER_PASSWORD || '';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -50,6 +56,7 @@ const authLimiter = rateLimit({
 app.use('/api/google/auth', authLimiter);
 app.use('/api/google/callback', authLimiter);
 app.use('/api/auth/apple', authLimiter);
+app.use('/api/auth/demo', authLimiter);
 
 // CORS con orígenes controlados
 const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100', 'http://localhost', 'https://localhost'];
@@ -376,6 +383,64 @@ app.post('/api/auth/apple', async (req, res) => {
     res.status(500).json({
       success: false,
       message: isProduction ? 'Error interno' : error.message || 'Error en autenticación con Apple'
+    });
+  }
+});
+
+// Login de cuenta demo (revisión de App Store) — credenciales fijas vía env.
+// Compara en tiempo constante y solo permite la única cuenta demo configurada.
+app.post('/api/auth/demo', async (req, res) => {
+  try {
+    // Deshabilitado si no hay credenciales configuradas en el entorno
+    if (!DEMO_USER_EMAIL || !DEMO_USER_PASSWORD) {
+      return res.status(404).json({ success: false, message: 'No disponible' });
+    }
+
+    const { email, password } = req.body || {};
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'Credenciales requeridas' });
+    }
+
+    const safeEqual = (a, b) => {
+      const bufA = Buffer.from(String(a));
+      const bufB = Buffer.from(String(b));
+      if (bufA.length !== bufB.length) return false;
+      return crypto.timingSafeEqual(bufA, bufB);
+    };
+
+    const emailOk = safeEqual(email.trim().toLowerCase(), DEMO_USER_EMAIL.trim().toLowerCase());
+    const passOk = safeEqual(password, DEMO_USER_PASSWORD);
+
+    if (!emailOk || !passOk) {
+      return res.status(401).json({ success: false, message: 'Credenciales inválidas' });
+    }
+
+    const usuario = await authService.upsertDemoUser({
+      email: DEMO_USER_EMAIL.trim().toLowerCase(),
+      name: 'Cuenta Demo (App Review)'
+    });
+
+    req.session.user = {
+      id: usuario.email,
+      email: usuario.email,
+      name: usuario.nombre,
+      picture: null,
+      verified_email: true
+    };
+
+    console.log('[Demo Auth] Sesión demo creada para:', usuario.email);
+
+    res.json({
+      success: true,
+      user: req.session.user,
+      message: 'Autenticación demo exitosa'
+    });
+
+  } catch (error) {
+    console.error('[Demo Auth] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: isProduction ? 'Error interno' : error.message || 'Error en autenticación demo'
     });
   }
 });

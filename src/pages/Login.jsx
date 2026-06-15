@@ -5,7 +5,8 @@ import {
   IonButton,
   IonIcon,
   IonText,
-  IonSpinner
+  IonSpinner,
+  IonInput
 } from '@ionic/react';
 import { logoGoogle, logoApple } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
@@ -17,6 +18,9 @@ import './Login.css';
 const Login = ({ onLoginSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showDemo, setShowDemo] = useState(false);
+  const [demoEmail, setDemoEmail] = useState('');
+  const [demoPassword, setDemoPassword] = useState('');
   const isNative = Capacitor.isNativePlatform();
   const isIOS = Capacitor.getPlatform() === 'ios';
 
@@ -43,6 +47,36 @@ const Login = ({ onLoginSuccess }) => {
     } catch (error) {
       console.error('[Login] Error en login nativo:', error);
       setError(error.message || 'Error al autenticar con Google. Por favor, intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Login de cuenta demo (revisión de App Store) — correo + contraseña
+  const handleDemoLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const response = await fetch(`${API_BASE}/auth/demo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email: demoEmail, password: demoPassword })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || 'No se pudo iniciar la sesión demo.');
+      }
+
+      localStorage.setItem('ecoraUser', JSON.stringify(data.user));
+      onLoginSuccess(data.user);
+
+    } catch (error) {
+      console.error('[Login] Error en login demo:', error);
+      setError(error.message || 'Error al iniciar la sesión demo.');
     } finally {
       setIsLoading(false);
     }
@@ -218,6 +252,43 @@ const Login = ({ onLoginSuccess }) => {
               <p>{error}</p>
             </IonText>
           )}
+
+          {/* Acceso demo para revisión de App Store */}
+          {showDemo && (
+            <div className="demo-login-form">
+              <IonInput
+                className="demo-input"
+                type="email"
+                placeholder="Correo demo"
+                autocapitalize="off"
+                value={demoEmail}
+                onIonInput={(e) => setDemoEmail(e.detail.value || '')}
+              />
+              <IonInput
+                className="demo-input"
+                type="password"
+                placeholder="Contraseña"
+                value={demoPassword}
+                onIonInput={(e) => setDemoPassword(e.detail.value || '')}
+              />
+              <IonButton
+                expand="block"
+                onClick={handleDemoLogin}
+                disabled={isLoading || !demoEmail || !demoPassword}
+                className="demo-submit-button"
+              >
+                {isLoading ? <IonSpinner name="crescent" /> : 'Ingresar'}
+              </IonButton>
+            </div>
+          )}
+
+          <button
+            type="button"
+            className="demo-toggle-link"
+            onClick={() => setShowDemo((v) => !v)}
+          >
+            {showDemo ? 'Ocultar acceso demo' : 'Acceso demo'}
+          </button>
 
           {/* Footer con valores de Ecora */}
           <div className="login-footer">
