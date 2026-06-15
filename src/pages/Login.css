@@ -113,6 +113,37 @@
   --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
+/* Sign in with Apple — estilo negro según las Human Interface Guidelines */
+.apple-login-button {
+  --background: #000000;
+  --background-hover: #1a1a1a;
+  --background-activated: #1a1a1a;
+  --color: #ffffff;
+  --border-radius: 14px;
+  --box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+  font-family: var(--ecora-font-primary);
+  font-weight: 600;
+  font-size: 16px;
+  height: 56px;
+  max-width: 400px;
+  width: 100%;
+  margin: 0 auto 14px auto;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+.apple-login-button:hover {
+  transform: translateY(-3px);
+  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.apple-login-button ion-icon {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
 .google-login-button ion-icon {
   font-size: 24px;
   margin-right: 8px;

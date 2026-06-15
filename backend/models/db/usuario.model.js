@@ -10,6 +10,11 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: true,
       unique: true
     },
+    appleId: {
+      type: Sequelize.STRING,
+      allowNull: true,
+      unique: true
+    },
     email: {
       type: Sequelize.STRING,
       allowNull: false,

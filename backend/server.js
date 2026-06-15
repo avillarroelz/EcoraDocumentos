@@ -6,8 +6,13 @@ const session = require('express-session');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const { v4: uuidv4 } = require('uuid');
+const appleSignin = require('apple-signin-auth');
 const GoogleDriveService = require('./googleDriveConfig');
+const authService = require('./services/authService');
 require('dotenv').config();
+
+// Bundle ID de la app iOS — es el "audience" del token de Sign in with Apple
+const APPLE_CLIENT_ID = process.env.APPLE_CLIENT_ID || 'com.ecora.app';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -44,6 +49,7 @@ const authLimiter = rateLimit({
 });
 app.use('/api/google/auth', authLimiter);
 app.use('/api/google/callback', authLimiter);
+app.use('/api/auth/apple', authLimiter);
 
 // CORS con orígenes controlados
 const corsOrigins = process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:8100', 'http://localhost', 'https://localhost'];
@@ -293,6 +299,83 @@ app.post('/api/google/auth/native', async (req, res) => {
     res.status(500).json({
       success: false,
       message: isProduction ? 'Error interno' : error.message || 'Error en autenticación nativa'
+    });
+  }
+});
+
+// Sign in with Apple (nativo iOS) — verifica el identityToken contra las claves
+// públicas de Apple, vincula/crea el usuario por email y crea la sesión.
+app.post('/api/auth/apple', async (req, res) => {
+  try {
+    const { identityToken, user: clientUser } = req.body;
+
+    if (!identityToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'Falta el identityToken de Apple'
+      });
+    }
+
+    // Verificar firma, emisor (apple) y audiencia (bundle id) del token
+    let payload;
+    try {
+      payload = await appleSignin.verifyIdToken(identityToken, {
+        audience: APPLE_CLIENT_ID,
+        ignoreExpiration: false
+      });
+    } catch (verifyError) {
+      console.error('[Apple Auth] Token inválido:', verifyError.message);
+      return res.status(401).json({
+        success: false,
+        message: 'Token de Apple inválido o expirado'
+      });
+    }
+
+    const sub = payload.sub;
+    // El email viene en el token (salvo que el usuario lo oculte tras un relay).
+    const email = payload.email || clientUser?.email || null;
+
+    // Apple SOLO entrega el nombre en el primer inicio de sesión, y lo manda
+    // el cliente (no viene en el token).
+    let name = null;
+    if (clientUser?.givenName || clientUser?.familyName) {
+      name = [clientUser.givenName, clientUser.familyName].filter(Boolean).join(' ');
+    } else if (clientUser?.name) {
+      name = clientUser.name;
+    }
+
+    const usuario = await authService.upsertAppleUser({ sub, email, name });
+
+    if (usuario.estado === false) {
+      return res.status(403).json({
+        success: false,
+        message: 'Su usuario está desactivado. Contacte al administrador.'
+      });
+    }
+
+    // La sesión usa el mismo formato que el login Google; requireAuth localiza
+    // al usuario por email (googleId queda null para cuentas Apple).
+    req.session.user = {
+      id: usuario.appleId || sub,
+      email: usuario.email,
+      name: usuario.nombre,
+      picture: usuario.fotoPerfil || null,
+      verified_email: true
+    };
+
+    console.log('[Apple Auth] Sesión creada para:', usuario.email);
+
+    res.json({
+      success: true,
+      user: req.session.user,
+      message: 'Autenticación con Apple exitosa'
+    });
+
+  } catch (error) {
+    console.error('[Apple Auth] Error:', error);
+    res.status(500).json({
+      success: false,
+      message: isProduction ? 'Error interno' : error.message || 'Error en autenticación con Apple'
     });
   }
 });

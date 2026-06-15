@@ -7,16 +7,18 @@ import {
   IonText,
   IonSpinner
 } from '@ionic/react';
-import { logoGoogle } from 'ionicons/icons';
+import { logoGoogle, logoApple } from 'ionicons/icons';
 import { Capacitor } from '@capacitor/core';
 import API_BASE from '../config/api';
 import { initGoogleAuth, signInWithGoogle } from '../services/googleAuthNative';
+import { signInWithApple } from '../services/appleAuthNative';
 import './Login.css';
 
 const Login = ({ onLoginSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const isNative = Capacitor.isNativePlatform();
+  const isIOS = Capacitor.getPlatform() === 'ios';
 
   // Inicializar Google Auth en plataformas nativas
   useEffect(() => {
@@ -41,6 +43,28 @@ const Login = ({ onLoginSuccess }) => {
     } catch (error) {
       console.error('[Login] Error en login nativo:', error);
       setError(error.message || 'Error al autenticar con Google. Por favor, intenta nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Login con Apple (solo iOS nativo)
+  const handleAppleLogin = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+
+      const user = await signInWithApple();
+
+      localStorage.setItem('ecoraUser', JSON.stringify(user));
+      onLoginSuccess(user);
+
+    } catch (error) {
+      console.error('[Login] Error en login con Apple:', error);
+      // No mostrar error si el usuario simplemente canceló
+      if (!/cancel/i.test(error.message || '')) {
+        setError(error.message || 'Error al autenticar con Apple. Por favor, intenta nuevamente.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -152,6 +176,20 @@ const Login = ({ onLoginSuccess }) => {
               Encuentra todo lo que quieras en un solo clic
             </p>
           </IonText>
+
+          {/* Botón de Sign in with Apple (solo iOS, requisito guía 4.8) */}
+          {isIOS && (
+            <IonButton
+              expand="block"
+              size="large"
+              onClick={handleAppleLogin}
+              disabled={isLoading}
+              className="apple-login-button"
+            >
+              <IonIcon icon={logoApple} slot="start" />
+              Iniciar sesión con Apple
+            </IonButton>
+          )}
 
           {/* Botón de Login con Google */}
           <IonButton

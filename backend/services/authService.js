@@ -92,6 +92,80 @@ class AuthService {
   }
 
   /**
+   * Buscar o crear usuario desde Sign in with Apple.
+   * Apple solo entrega el nombre/email en el PRIMER inicio de sesión, por eso
+   * se vincula por email a un usuario existente y se persiste el appleId.
+   */
+  async upsertAppleUser(appleProfile) {
+    try {
+      const { sub: appleId, email, name } = appleProfile;
+
+      const includeAssociations = [
+        {
+          model: db.Rol,
+          as: "roles",
+          through: { attributes: [] }
+        },
+        {
+          model: db.UnidadNegocio,
+          as: "unidadesNegocio",
+          through: { attributes: [] },
+          include: [{
+            model: db.LineaNegocio,
+            as: "lineaNegocio"
+          }]
+        }
+      ];
+
+      // Buscar por appleId o por email (vinculación con cuenta Google existente)
+      const orConditions = [{ appleId }];
+      if (email) {
+        orConditions.push({ email });
+      }
+
+      let usuario = await db.Usuario.findOne({
+        where: { [Op.or]: orConditions },
+        include: includeAssociations
+      });
+
+      if (usuario) {
+        // Vincular appleId si aún no estaba y actualizar último login
+        const updates = { ultimoLogin: new Date(), appleId };
+        if (!usuario.nombre && name) {
+          updates.nombre = name;
+        }
+        await usuario.update(updates);
+      } else {
+        // Crear nuevo usuario con rol viewer por defecto
+        const viewerRole = await db.Rol.findOne({
+          where: { nombre: "viewer" }
+        });
+
+        usuario = await db.Usuario.create({
+          appleId,
+          email,
+          nombre: name || (email ? email.split("@")[0] : "Usuario Apple"),
+          estado: true,
+          ultimoLogin: new Date()
+        });
+
+        if (viewerRole) {
+          await usuario.addRole(viewerRole);
+        }
+
+        usuario = await db.Usuario.findByPk(usuario.id, {
+          include: includeAssociations
+        });
+      }
+
+      return usuario;
+    } catch (error) {
+      console.error("Error en upsertAppleUser:", error);
+      throw error;
+    }
+  }
+
+  /**
    * Obtener usuario con permisos
    */
   async getUserWithPermissions(userId) {

@@ -9,6 +9,8 @@ PODS:
     - CapacitorCordova
   - CapacitorBrowser (5.2.1):
     - Capacitor
+  - CapacitorCommunityAppleSignIn (5.0.0):
+    - Capacitor
   - CapacitorCordova (5.7.8)
   - CodetrixStudioCapacitorGoogleAuth (0.0.1):
     - Capacitor
@@ -25,6 +27,7 @@ PODS:
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorBrowser (from `../../node_modules/@capacitor/browser`)"
+  - "CapacitorCommunityAppleSignIn (from `../../node_modules/@capacitor-community/apple-sign-in`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
   - "CodetrixStudioCapacitorGoogleAuth (from `../../node_modules/@codetrix-studio/capacitor-google-auth`)"
 
@@ -40,6 +43,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorBrowser:
     :path: "../../node_modules/@capacitor/browser"
+  CapacitorCommunityAppleSignIn:
+    :path: "../../node_modules/@capacitor-community/apple-sign-in"
   CapacitorCordova:
     :path: "../../node_modules/@capacitor/ios"
   CodetrixStudioCapacitorGoogleAuth:
@@ -49,12 +54,13 @@ SPEC CHECKSUMS:
   AppAuth: d4f13a8fe0baf391b2108511793e4b479691fb73
   Capacitor: 9686e5711b48a1aa84671ede795d0175848abcba
   CapacitorBrowser: f13ada96777742309ae17a974e934eda8e102508
+  CapacitorCommunityAppleSignIn: 72676596c6ff57fce8f687365dfc5d8395bb45ac
   CapacitorCordova: 31ab98dca2ddcee051027a1afe7e8c85c82f7297
   CodetrixStudioCapacitorGoogleAuth: 88ad04845b71e573d44237c15dd6a2345c8cdfcb
   GoogleSignIn: d4281ab6cf21542b1cfaff85c191f230b399d2db
   GTMAppAuth: f69bd07d68cd3b766125f7e072c45d7340dea0de
   GTMSessionFetcher: 5aea5ba6bd522a239e236100971f10cb71b96ab6
 
-PODFILE CHECKSUM: 79f9bcfe68a50baed4ff680ebace45c100e36889
+PODFILE CHECKSUM: 398efc39c91f2ec5497c73608996a08e64963a18
 
 COCOAPODS: 1.16.2
