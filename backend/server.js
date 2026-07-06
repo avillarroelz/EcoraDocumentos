@@ -6,6 +6,8 @@ const session = require('express-session');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const appleSignin = require('apple-signin-auth');
 const GoogleDriveService = require('./googleDriveConfig');
@@ -29,10 +31,23 @@ if (isProduction) {
   app.set('trust proxy', 1);
 }
 
+// CloudFront llega al origen por HTTP; el protocolo real del visitante viene en
+// CloudFront-Forwarded-Proto. Sin esto, Express no marcaría la cookie de sesión
+// como Secure y el login fallaría detrás del CDN.
+app.use((req, res, next) => {
+  const cfProto = req.headers['cloudfront-forwarded-proto'];
+  if (cfProto) req.headers['x-forwarded-proto'] = cfProto;
+  next();
+});
+
 // Helmet: headers de seguridad
 app.use(helmet({
   contentSecurityPolicy: false, // Deshabilitado porque el callback OAuth retorna HTML inline
-  crossOriginEmbedderPolicy: false
+  crossOriginEmbedderPolicy: false,
+  // COOP same-origin (default de helmet) corta window.opener entre la app y el
+  // popup de Google OAuth: el postMessage del callback nunca llega y el login
+  // no redirecciona. Se desactiva para conservar el flujo por popup.
+  crossOriginOpenerPolicy: false
 }));
 
 // Rate limiting general: 100 requests por 15 minutos por IP
@@ -1069,6 +1084,19 @@ app.get('/privacidad', (req, res) => {
 </body>
 </html>`);
 });
+
+// Frontend web: el build de Vite (dist/) se copia dentro de backend/ al empaquetar el deploy.
+// La app web usa la ruta relativa /api, por lo que debe servirse desde este mismo origen.
+const webDistPath = path.join(__dirname, 'dist');
+if (fs.existsSync(path.join(webDistPath, 'index.html'))) {
+  app.use(express.static(webDistPath, { index: 'index.html', maxAge: '1h' }));
+
+  // Fallback SPA: cualquier GET no-API devuelve index.html (rutas como /login, /section/:id)
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api/')) return next();
+    res.sendFile(path.join(webDistPath, 'index.html'));
+  });
+}
 
 // Manejo de rutas no encontradas
 app.use('*', (req, res) => {

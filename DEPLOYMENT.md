@@ -13,8 +13,9 @@ y certificado HTTPS) está en **`CONFIGURACION_AWS_PRODUCCION.md`**.
 
 | Componente | Dónde se despliega |
 |---|---|
-| **Backend (Express + Sequelize)** | AWS Elastic Beanstalk, tras el dominio propio HTTPS `clic.ecoraapp.com` |
-| **Frontend web** | Servido desde AWS (no Vercel/Netlify) |
+| **CDN** | CloudFront (distribución `E3B6DL411P45K1`, `d114wag0prx756.cloudfront.net`) delante de todo `clic.ecoraapp.com`; cachea/comprime estáticos, `/api/*` pasa sin caché |
+| **Backend (Express + Sequelize)** | AWS Elastic Beanstalk (`ecora-backend` / `ecora-prod-v3`, us-east-1), origen de CloudFront |
+| **Frontend web** | Build de Vite (`npm run build` → `dist/`) copiado a `backend/dist`; Express lo sirve (`express.static` + fallback SPA) |
 | **Páginas públicas** (ej. Política de Privacidad `/privacidad`) | Servidas directamente por el backend Express |
 | **Base de datos** | PostgreSQL en AWS RDS (región `sa-east-1`) |
 | **App Android** | APK firmado con `ecora-release-key.jks` → Google Play |
@@ -22,10 +23,12 @@ y certificado HTTPS) está en **`CONFIGURACION_AWS_PRODUCCION.md`**.
 
 ---
 
-## 🚀 Desplegar el backend en AWS
+## 🚀 Desplegar el backend (+ frontend web) en AWS
 
 1. **Build / preparación**
    ```bash
+   npm run build                    # genera dist/ en la raíz
+   # copiar dist/ → backend/dist (el ZIP de deploy empaqueta solo backend/)
    cd backend
    npm install --production
    ```
@@ -44,7 +47,14 @@ y certificado HTTPS) está en **`CONFIGURACION_AWS_PRODUCCION.md`**.
      eb deploy
      ```
 
-4. **Verificar**
+4. **Invalidar la caché de CloudFront** (obligatorio tras cada deploy con frontend nuevo,
+   porque `index.html` queda cacheado en el edge):
+   ```bash
+   aws cloudfront create-invalidation --distribution-id E3B6DL411P45K1 --paths "/*"
+   ```
+
+5. **Verificar**
+   - `https://clic.ecoraapp.com/` → debe cargar la aplicación web (SPA)
    - `https://clic.ecoraapp.com/api/health` (o el endpoint de salud correspondiente)
    - `https://clic.ecoraapp.com/privacidad` → debe mostrar la Política de Privacidad
 
